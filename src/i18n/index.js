@@ -198,7 +198,7 @@ const resources = {
       scale_reference: 'Escala de referencia CBI (0-100)',
       scale_low: '0-49: Bajo',
       scale_medium: '50-74: Medio',
-      scale_high: '75-100: Alto'
+      scale_high: '75-100: Alto',
 // Demográficos
 demo_title: 'Sección 1: Perfil Demográfico y Ocupacional',
 demo_step: 'Paso 2 de 4',
@@ -436,7 +436,7 @@ qual_finish: 'Finalizar Evaluación',
       scale_reference: 'CBI reference scale (0-100)',
       scale_low: '0-49: Low',
       scale_medium: '50-74: Medium',
-      scale_high: '75-100: High'
+      scale_high: '75-100: High',
 // Demographics
 demo_title: 'Section 1: Demographic and Occupational Profile',
 demo_step: 'Step 2 of 4',
