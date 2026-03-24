@@ -199,6 +199,45 @@ const resources = {
       scale_low: '0-49: Bajo',
       scale_medium: '50-74: Medio',
       scale_high: '75-100: Alto'
+// Demográficos
+demo_title: 'Sección 1: Perfil Demográfico y Ocupacional',
+demo_step: 'Paso 2 de 4',
+demo_instructions: 'Esta información es anónima y se usa para identificar patrones organizacionales.',
+demo_age: '1. Rango de edad',
+demo_gender: '2. Género',
+demo_education: '3. Nivel educativo más alto',
+demo_sector: '4. Sector de trabajo',
+demo_industry: '5. Industria / Campo',
+demo_industry_other: 'Especifica tu industria',
+demo_job_level: '6. Nivel de puesto',
+demo_experience: '7. Años de experiencia en posición actual',
+demo_hours: '8. Horas de trabajo promedio por semana',
+demo_work_mode: '9. Modalidad de trabajo',
+demo_select: 'Selecciona una opción...',
+
+// Opciones demográficas
+age_18: '18-25', age_26: '26-35', age_36: '36-45', age_46: '46-55', age_56: '56+',
+gender_male: 'Masculino', gender_female: 'Femenino', gender_nb: 'No binario', gender_na: 'Prefiero no decir',
+edu_hs: 'Preparatoria / Bachillerato', edu_tech: 'Técnico', edu_bach: 'Licenciatura', edu_master: 'Maestría', edu_phd: 'Doctorado',
+sector_private: 'Sector privado', sector_public: 'Sector público', sector_ngo: 'ONG / Sin fines de lucro',
+industry_mfg: 'Manufactura', industry_health: 'Salud', industry_edu: 'Educación', industry_eng: 'Construcción / Ingeniería', industry_svc: 'Servicios', industry_other: 'Otro',
+level_entry: 'Operativo / Entrada', level_staff: 'Especialista / Staff', level_mid: 'Mandos medios', level_exec: 'Dirección / Liderazgo',
+exp_less1: 'Menos de 1 año', exp_1_3: '1-3 años', exp_4_7: '4-7 años', exp_8plus: '8+ años',
+hours_less40: 'Menos de 40h', hours_40_48: '40-48h', hours_more48: 'Más de 48h',
+mode_onsite: 'Presencial', mode_remote: 'Remoto / Teletrabajo', mode_hybrid: 'Híbrido',
+
+// Cualitativos
+qual_title: 'Sección 3: Contexto Cualitativo',
+qual_step: 'Paso 4 de 4 — Opcional',
+qual_instructions: 'Tus respuestas ayudan al equipo a entender los factores organizacionales detrás de los datos.',
+qual_q1_label: '1. Factores del ambiente de trabajo',
+qual_q1_desc: '¿Cuáles son los principales factores en tu entorno laboral (carga de trabajo, liderazgo, recursos) que más contribuyen a tu estrés o bienestar?',
+qual_q2_label: '2. Soporte organizacional',
+qual_q2_desc: '¿Qué cambios, herramientas o sistemas de apoyo crees que tu organización podría implementar para prevenir mejor el burnout?',
+qual_q3_label: '3. Comentarios adicionales',
+qual_q3_desc: '¿Hay algo más que quieras compartir sobre tu experiencia con el estrés laboral que no fue cubierto en las preguntas anteriores?',
+qual_placeholder: 'Escribe tu respuesta aquí (opcional)...',
+qual_finish: 'Finalizar Evaluación',
     }
   },
   en: {
@@ -398,6 +437,45 @@ const resources = {
       scale_low: '0-49: Low',
       scale_medium: '50-74: Medium',
       scale_high: '75-100: High'
+// Demographics
+demo_title: 'Section 1: Demographic and Occupational Profile',
+demo_step: 'Step 2 of 4',
+demo_instructions: 'This information is anonymous and used to identify organizational patterns.',
+demo_age: '1. Age Range',
+demo_gender: '2. Gender',
+demo_education: '3. Highest Level of Education',
+demo_sector: '4. Work Sector',
+demo_industry: '5. Industry / Field',
+demo_industry_other: 'Specify your industry',
+demo_job_level: '6. Job Level',
+demo_experience: '7. Years of Experience in Current Position',
+demo_hours: '8. Average Weekly Working Hours',
+demo_work_mode: '9. Work Arrangement',
+demo_select: 'Select an option...',
+
+// Demographic options
+age_18: '18-25', age_26: '26-35', age_36: '36-45', age_46: '46-55', age_56: '56+',
+gender_male: 'Male', gender_female: 'Female', gender_nb: 'Non-binary', gender_na: 'Prefer not to say',
+edu_hs: 'High School', edu_tech: 'Technical Degree', edu_bach: "Bachelor's Degree", edu_master: "Master's Degree", edu_phd: 'PhD',
+sector_private: 'Private Sector', sector_public: 'Public Sector', sector_ngo: 'Non-profit / NGO',
+industry_mfg: 'Manufacturing', industry_health: 'Healthcare', industry_edu: 'Education', industry_eng: 'Construction/Engineering', industry_svc: 'Services', industry_other: 'Other',
+level_entry: 'Entry-level', level_staff: 'Specialist/Staff', level_mid: 'Middle Management', level_exec: 'Senior Leadership/Executive',
+exp_less1: 'Less than 1 year', exp_1_3: '1-3 years', exp_4_7: '4-7 years', exp_8plus: '8+ years',
+hours_less40: 'Less than 40h', hours_40_48: '40-48h', hours_more48: 'More than 48h',
+mode_onsite: 'On-site', mode_remote: 'Remote/Telework', mode_hybrid: 'Hybrid',
+
+// Qualitative
+qual_title: 'Section 3: Qualitative Context',
+qual_step: 'Step 4 of 4 — Optional',
+qual_instructions: 'Your answers help the research team understand the organizational factors behind the data.',
+qual_q1_label: '1. Work Environment Factors',
+qual_q1_desc: 'In your own words, what are the primary factors in your current work environment (e.g., workload, leadership, resources) that contribute most to your stress or well-being?',
+qual_q2_label: '2. Organizational Support',
+qual_q2_desc: 'Are there any specific changes, tools, or support systems that you believe your organization could implement to better prevent burnout?',
+qual_q3_label: '3. Additional Comments',
+qual_q3_desc: 'Is there anything else you would like to share regarding your experience with workplace stress that was not covered in the previous questions?',
+qual_placeholder: 'Write your answer here (optional)...',
+qual_finish: 'Finish Evaluation',
     }
   }
 };
