@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Lock, Search, RefreshCw, Filter, Calendar, User, Activity, Database, Shield } from 'lucide-react';
+import { auditoriaService } from '../services/api';
 
 const AuditoriaSeguridad = ({ usuario }) => {
   const [registros, setRegistros] = useState([]);
@@ -13,31 +14,23 @@ const AuditoriaSeguridad = ({ usuario }) => {
     cargarAuditoria();
   }, []);
 
-  const cargarAuditoria = async () => {
-    setCargando(true);
-    setError('');
-    try {
-      const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:3001/api/auditoria', {
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      });
-      
-      const data = await response.json();
-      
-      if (data.success) {
-        setRegistros(data.data);
-      } else {
-        setError(data.error || 'Error al cargar auditoría');
-      }
-    } catch (err) {
-      setError('Error de conexión con el servidor');
-      console.error(err);
-    } finally {
-      setCargando(false);
+ const cargarAuditoria = async () => {
+  setCargando(true);
+  setError('');
+  try {
+    const response = await auditoriaService.obtenerTodos();
+    if (response.success) {
+      setRegistros(response.data);
+    } else {
+      setError(response.error || 'Error al cargar auditoría');
     }
-  };
+  } catch (err) {
+    setError('Error de conexión con el servidor');
+    console.error(err);
+  } finally {
+    setCargando(false);
+  }
+};
 
   const formatearFecha = (fecha) => {
     return new Date(fecha).toLocaleString('es-MX', {

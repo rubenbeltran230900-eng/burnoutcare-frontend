@@ -138,7 +138,10 @@ export const recomendacionesService = {
   obtenerPorEvaluacion: (evaluacionId) => fetchAPI(`/recomendaciones/${evaluacionId}`),
   obtenerTodas: () => fetchAPI('/recomendaciones')
 };
-
+// ==================== AUDITORÍA ====================
+export const auditoriaService = {
+  obtenerTodos: () => fetchAPI('/auditoria')
+};
 export default {
   auth: authService,
   empresas: empresasService,
