@@ -42,8 +42,8 @@ const opcionesExperiencia = ['Menos de 1 año', '1-3 años', '4-7 años', '8+ a�
 const opcionesHoras       = ['Menos de 40h', '40-48h', 'Más de 48h'];
 const opcionesModalidad   = ['Presencial', 'Remoto / Teletrabajo', 'Híbrido'];
 
-const ModuloEvaluacionCBI = ({ usuario, onCambiarModulo }) => {
-  const [paso, setPaso] = useState('inicio');
+const ModuloEvaluacionMBI = ({ usuario, onCambiarModulo }) => {  
+const [paso, setPaso] = useState('inicio');
   const [datosColaborador, setDatosColaborador] = useState({ nombre: '', area: '', puesto: '' });
   const [demograficos, setDemograficos] = useState({
     edad: '', genero: '', educacion: '', sector: '',
