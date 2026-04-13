@@ -149,3 +149,13 @@ export default {
   evaluaciones: evaluacionesService,
   recomendaciones: recomendacionesService
 };
+// ==================== EMPRESAS ====================
+export const empresasService = {
+  obtenerTodas: () => fetchAPI('/empresas'),
+  obtenerPorId: (id) => fetchAPI(`/empresas/${id}`),
+  crear: (data) => fetchAPI('/empresas', { method: 'POST', body: JSON.stringify(data) }),
+  actualizar: (id, data) => fetchAPI(`/empresas/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
+  toggleActivo: (id) => fetchAPI(`/empresas/${id}/toggle`, { method: 'PATCH' }),
+  eliminar: (id) => fetchAPI(`/empresas/${id}`, { method: 'DELETE' }),
+  obtenerUsuarios: (id) => fetchAPI(`/empresas/${id}/usuarios`),
+};

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Shield, Users, BarChart3, ClipboardList, Activity, FileText, Settings, LogOut, ChevronRight, Menu, X, Bell, Lock, User, Eye, EyeOff, Brain, Globe } from 'lucide-react';
+import { Shield, Users, BarChart3, ClipboardList, Activity, FileText, Settings, LogOut, ChevronRight, Menu, X, Bell, Lock, User, Eye, EyeOff, Brain, Globe, Building2 } from 'lucide-react';
 import { authService } from './services/api';
 import { useTranslation } from 'react-i18next';
 
@@ -13,6 +13,7 @@ import GestionUsuarios from './components/GestionUsuarios';
 import GestionRolesPermisos from './components/GestionRolesPermisos';
 import AuditoriaSeguridad from './components/AuditoriaSeguridad';
 import MotorRecomendacionesIA from './components/MotorRecomendacionesIA';
+import GestionEmpresas from './components/GestionEmpresas';
 
 function App() {
   const [usuarioAutenticado, setUsuarioAutenticado] = useState(null);
@@ -51,7 +52,8 @@ const cambiarIdioma = (idioma) => {
       { id: 'usuarios', nombre: 'Gestión Usuarios', icono: Users, descripcion: 'Administración de usuarios' },
       { id: 'roles', nombre: 'Roles y Permisos', icono: Shield, descripcion: 'Configuración de accesos' },
       { id: 'auditoria', nombre: 'Auditoría', icono: Lock, descripcion: 'Registro de actividades' },
-      { id: 'recomendaciones', nombre: 'Recomendaciones IA', icono: Brain, descripcion: 'Motor de recomendaciones inteligentes' }
+      { id: 'recomendaciones', nombre: 'Recomendaciones IA', icono: Brain, descripcion: 'Motor de recomendaciones inteligentes' },
+{ id: 'empresas', nombre: 'Gestión Empresas', icono: Building2, descripcion: 'Administración de empresas y usuarios' }
     ],
     profesional: [
       { id: 'evaluacion', nombre: 'Evaluación CBI', icono: ClipboardList, descripcion: 'Realizar evaluación de burnout' },
@@ -130,6 +132,8 @@ const cambiarIdioma = (idioma) => {
         return <AuditoriaSeguridad {...props} />;
       case 'recomendaciones':
         return <MotorRecomendacionesIA {...props} />;
+case 'empresas':
+  return <GestionEmpresas {...props} />;
       default:
         return (
           <div className="flex items-center justify-center h-full">
