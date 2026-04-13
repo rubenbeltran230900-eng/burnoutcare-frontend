@@ -77,11 +77,20 @@ const GestionEmpresas = () => {
     finally { setCargando(false); }
   };
 
-  const entrarEmpresa = (empresa) => {
-    setEmpresaSeleccionada(empresa);
-    setVista('usuarios');
-    cargarUsuarios(empresa.id);
-  };
+ const entrarEmpresa = async (empresa) => {
+  setEmpresaSeleccionada(empresa);
+  setVista('usuarios');
+  setCargando(true);
+  setError('');
+  try {
+    const res = await empresasService.obtenerUsuarios(empresa.id);
+    if (res.success) setUsuarios(res.data);
+  } catch {
+    setError('Error al cargar usuarios');
+  } finally {
+    setCargando(false);
+  }
+};
 
   const volverEmpresas = () => {
     setVista('empresas');
