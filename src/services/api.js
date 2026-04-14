@@ -83,9 +83,11 @@ export const empresasService = {
     method: 'PUT',
     body: JSON.stringify(data)
   }),
-  eliminar: (id) => fetchAPI(`/empresas/${id}`, {
+ eliminar: (id) => fetchAPI(`/empresas/${id}`, {
     method: 'DELETE'
-  })
+  }),
+  toggleActivo: (id) => fetchAPI(`/empresas/${id}/toggle`, { method: 'PATCH' }),
+  obtenerUsuarios: (id) => fetchAPI(`/empresas/${id}/usuarios`)
 };
 
 // ==================== USUARIOS ====================
