@@ -73,7 +73,7 @@ const GestionEmpresas = () => {
     try {
       const res = await empresasService.obtenerUsuarios(empresaId);
       if (res.success) setUsuarios(res.data);
-    } catch { setError('Error al cargar usuarios'); }
+    } catch (err) { console.error('Error detallado:', err); setError('Error al cargar usuarios: ' + err.message); }
     finally { setCargando(false); }
   };
 
