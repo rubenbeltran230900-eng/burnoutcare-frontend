@@ -165,7 +165,7 @@ const GestionEmpresas = () => {
         await usuariosService.crear(data);
       }
       setModal(null);
-      cargarUsuarios(empresaSeleccionada.id);
+      await cargarUsuarios(empresaSeleccionada.id);
     } catch { setError('Error al guardar usuario'); }
     finally { setGuardando(false); }
   };
@@ -173,7 +173,7 @@ const GestionEmpresas = () => {
   const toggleUsuario = async (usuario) => {
     try {
       await usuariosService.actualizar(usuario.id, { activo: !usuario.activo });
-      cargarUsuarios(empresaSeleccionada.id);
+      await cargarUsuarios(empresaSeleccionada.id);
     } catch { setError('Error al cambiar estado'); }
   };
 
@@ -193,7 +193,7 @@ const GestionEmpresas = () => {
       } else {
         await usuariosService.eliminar(itemAEliminar.item.id);
         setModal(null);
-        cargarUsuarios(empresaSeleccionada.id);
+       await cargarUsuarios(empresaSeleccionada.id);
       }
     } catch (err) {
       setError(err.message || 'Error al eliminar');
