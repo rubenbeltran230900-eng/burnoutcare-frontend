@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { ClipboardList, ChevronRight, ChevronLeft, CheckCircle, AlertTriangle, User, Briefcase, Building } from 'lucide-react';
 import { evaluacionesService } from '../services/api';
 
@@ -43,6 +44,7 @@ const opcionesHoras       = ['Menos de 40h', '40-48h', 'Más de 48h'];
 const opcionesModalidad   = ['Presencial', 'Remoto / Teletrabajo', 'Híbrido'];
 
 const ModuloEvaluacionMBI = ({ usuario, onCambiarModulo }) => {  
+const { t } = useTranslation();
 const [paso, setPaso] = useState('inicio');
   const [datosColaborador, setDatosColaborador] = useState({ nombre: '', area: '', puesto: '' });
   const [demograficos, setDemograficos] = useState({

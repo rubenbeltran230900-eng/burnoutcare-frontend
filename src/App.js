@@ -14,6 +14,7 @@ import GestionRolesPermisos from './components/GestionRolesPermisos';
 import AuditoriaSeguridad from './components/AuditoriaSeguridad';
 import MotorRecomendacionesIA from './components/MotorRecomendacionesIA';
 import GestionEmpresas from './components/GestionEmpresas';
+import RegistroEvaluado from './components/RegistroEvaluado';
 
 function App() {
   const [usuarioAutenticado, setUsuarioAutenticado] = useState(null);
@@ -24,6 +25,7 @@ function App() {
   const [mostrarPassword, setMostrarPassword] = useState(false);
   const [errorLogin, setErrorLogin] = useState('');
   const [cargando, setCargando] = useState(false);
+  const [mostrarRegistro, setMostrarRegistro] = useState(false);
 const { t, i18n } = useTranslation();
 
 const cambiarIdioma = (idioma) => {
@@ -166,7 +168,16 @@ case 'empresas':
             <p className="text-blue-200">Sistema de Detección y Apoyo</p>
           </div>
 
-          {!mostrarLogin ? (
+          {mostrarRegistro ? (
+            <RegistroEvaluado
+              onRegistroExitoso={(data) => {
+                setUsuarioAutenticado(data.usuario);
+                setModuloActivo('evaluacion');
+                setMostrarRegistro(false);
+              }}
+              onVolverLogin={() => setMostrarRegistro(false)}
+            />
+          ) : !mostrarLogin ? (
             <div className="bg-white rounded-2xl shadow-xl p-8">
               <h2 className="text-xl font-semibold text-gray-800 mb-6 text-center">Iniciar Sesión</h2>
               <button
@@ -175,6 +186,15 @@ case 'empresas':
               >
                 Acceder al Sistema
               </button>
+              <div className="mt-4 text-center">
+                <p className="text-sm text-gray-500">¿Eres colaborador y no tienes cuenta?</p>
+                <button
+                  onClick={() => setMostrarRegistro(true)}
+                  className="mt-2 text-blue-600 hover:underline font-medium text-sm"
+                >
+                  Crear cuenta con código de empresa →
+                </button>
+              </div>
             </div>
           ) : (
             <div className="bg-white rounded-2xl shadow-xl p-8">
