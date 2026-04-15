@@ -53,7 +53,7 @@ const MisRecomendaciones = ({ usuario }) => {
   const cargarDatos = async () => {
     setCargando(true);
     try {
-      const data = await evaluacionesService.obtenerTodas();
+      const data = await evaluacionesService.obtenerTodas({ usuario_id: usuario.id });
       const lista = (data.data || data.evaluaciones || data || [])
        .filter(e => String(e.usuario_id) === String(usuario.id))
         .sort((a, b) => new Date(b.created_at || b.fecha) - new Date(a.created_at || a.fecha));
