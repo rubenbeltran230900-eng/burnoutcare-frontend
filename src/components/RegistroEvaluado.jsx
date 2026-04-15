@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import api from '../services/api';
 
 const RegistroEvaluado = ({ onRegistroExitoso, onVolverLogin }) => {
   const [paso, setPaso] = useState(1);
@@ -41,20 +40,30 @@ const RegistroEvaluado = ({ onRegistroExitoso, onVolverLogin }) => {
     if (!validarPaso2()) return;
     setLoading(true);
     try {
-      const response = await api.post('/auth/registro-evaluado', {
-        nombre: form.nombre,
-        email: form.email,
-        password: form.password,
-        codigo_registro: form.codigo_registro,
-        area: form.area,
-        puesto: form.puesto
+      const response = await fetch('https://burnoutcare-api-production.up.railway.app/api/auth/registro-evaluado', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          nombre: form.nombre,
+          email: form.email,
+          password: form.password,
+          codigo_registro: form.codigo_registro,
+          area: form.area,
+          puesto: form.puesto
+        })
       });
 
-      if (response.data.success) {
-        onRegistroExitoso(response.data.data);
+      const data = await response.json();
+
+      if (data.success) {
+        localStorage.setItem('token', data.data.token);
+        localStorage.setItem('usuario', JSON.stringify(data.data.usuario));
+        onRegistroExitoso(data.data);
+      } else {
+        setError(data.error || 'Error al registrar. Verifica tus datos.');
       }
     } catch (err) {
-      setError(err.response?.data?.error || 'Error al registrar. Verifica tus datos.');
+      setError('Error al conectar con el servidor.');
     } finally {
       setLoading(false);
     }
@@ -63,7 +72,7 @@ const RegistroEvaluado = ({ onRegistroExitoso, onVolverLogin }) => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
       <div className="bg-white rounded-2xl shadow-xl w-full max-w-md p-8">
-        
+
         {/* Header */}
         <div className="text-center mb-8">
           <div className="text-4xl mb-3">🧠</div>
