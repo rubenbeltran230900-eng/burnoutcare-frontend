@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Shield, Users, BarChart3, ClipboardList, Activity, FileText, Settings, LogOut, ChevronRight, Menu, X, Bell, Lock, User, Eye, EyeOff, Brain, Globe, Building2 } from 'lucide-react';
+import { Shield, Users, BarChart3, ClipboardList, Activity, FileText, Settings, LogOut, ChevronRight, Menu, X, Bell, Lock, User, Eye, EyeOff, Brain, Globe, Building2, Heart } from 'lucide-react';
 import { authService } from './services/api';
 import { useTranslation } from 'react-i18next';
 
@@ -15,6 +15,7 @@ import AuditoriaSeguridad from './components/AuditoriaSeguridad';
 import MotorRecomendacionesIA from './components/MotorRecomendacionesIA';
 import GestionEmpresas from './components/GestionEmpresas';
 import RegistroEvaluado from './components/RegistroEvaluado';
+import MisRecomendaciones from './components/MisRecomendaciones';
 
 function App() {
   const [usuarioAutenticado, setUsuarioAutenticado] = useState(null);
@@ -70,8 +71,9 @@ const cambiarIdioma = (idioma) => {
       { id: 'reportes', nombre: 'Reportes NOM-035', icono: FileText, descripcion: 'Generación de reportes normativos' }
     ],
     evaluado: [
-      { id: 'evaluacion', nombre: 'Evaluación CBI', icono: ClipboardList, descripcion: 'Realizar evaluación de burnout' },
-    ]
+  { id: 'evaluacion', nombre: 'Evaluación CBI', icono: ClipboardList, descripcion: 'Realizar evaluación de burnout' },
+  { id: 'mis-recomendaciones', nombre: 'Mis Recomendaciones', icono: Heart, descripcion: 'Ver mis resultados y recomendaciones' },
+]
   };
 
   // Función de login con API
@@ -136,6 +138,8 @@ const cambiarIdioma = (idioma) => {
         return <MotorRecomendacionesIA {...props} />;
 case 'empresas':
   return <GestionEmpresas {...props} />;
+  case 'mis-recomendaciones':
+  return <MisRecomendaciones {...props} />;
       default:
         return (
           <div className="flex items-center justify-center h-full">
