@@ -117,7 +117,10 @@ const GestionUsuarios = ({ usuario }) => {
         
         response = await usuariosService.actualizar(usuarioEditando.id, datosActualizar);
       } else {
-        response = await usuariosService.crear(usuarioEditando);
+        response = await usuariosService.crear({
+          ...usuarioEditando,
+          empresa_id: usuario.empresa_id
+        });
       }
 
       if (response.success) {
