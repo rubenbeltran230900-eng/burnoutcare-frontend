@@ -43,9 +43,13 @@ const opcionesExperiencia = ['Menos de 1 año', '1-3 años', '4-7 años', '8+ a�
 const opcionesHoras       = ['Menos de 40h', '40-48h', 'Más de 48h'];
 const opcionesModalidad   = ['Presencial', 'Remoto / Teletrabajo', 'Híbrido'];
 
-const ModuloEvaluacionMBI = ({ usuario, onCambiarModulo }) => {  
+const CONSENTIMIENTO_VERSION = '1.0-2026-06';
+
+const ModuloEvaluacionMBI = ({ usuario, onCambiarModulo }) => {
 const { t } = useTranslation();
 const [paso, setPaso] = useState('inicio');
+  const [consentimientoAceptado, setConsentimientoAceptado] = useState(false);
+  const [consentimientoFecha, setConsentimientoFecha] = useState(null);
   const [datosColaborador, setDatosColaborador] = useState({ nombre: '', area: '', puesto: '' });
   const [demograficos, setDemograficos] = useState({
     edad: '', genero: '', educacion: '', sector: '',
@@ -107,6 +111,9 @@ const [paso, setPaso] = useState('inicio');
     try {
       await evaluacionesService.crear({
         usuario_id: usuario.id,
+        consentimiento_aceptado: true,
+        consentimiento_fecha: consentimientoFecha,
+        consentimiento_version: CONSENTIMIENTO_VERSION,
         respuestas: {
           demograficos: {
             ...demograficos,
@@ -130,6 +137,8 @@ const [paso, setPaso] = useState('inicio');
 
   const reiniciarEvaluacion = () => {
     setPaso('inicio');
+    setConsentimientoAceptado(false);
+    setConsentimientoFecha(null);
     setDatosColaborador({ nombre: '', area: '', puesto: '' });
     setDemograficos({ edad: '', genero: '', educacion: '', sector: '', industria: '', industria_otro: '', nivel_puesto: '', experiencia: '', horas_semanales: '', modalidad: '' });
     setCualitativos({ factores_ambiente: '', soporte_organizacional: '', comentarios: '' });
@@ -178,10 +187,96 @@ const [paso, setPaso] = useState('inicio');
             <li>• Completamente confidencial</li>
           </ul>
         </div>
-        <button onClick={() => setPaso('datos')}
+        <button onClick={() => setPaso('consentimiento')}
           className="w-full py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium flex items-center justify-center gap-2">
           Comenzar Evaluación <ChevronRight className="w-5 h-5" />
         </button>
+      </div>
+    </div>
+  );
+
+  // ── CONSENTIMIENTO INFORMADO ─────────────────────────────
+  if (paso === 'consentimiento') return (
+    <div className="max-w-2xl mx-auto">
+      <div className="bg-white rounded-xl shadow-lg p-8">
+        <div className="text-center mb-6">
+          <h2 className="text-xl font-bold text-gray-800">Consentimiento Informado</h2>
+          <p className="text-gray-500 text-sm mt-1">Por favor lee y acepta antes de continuar</p>
+        </div>
+
+        <div className="bg-gray-50 border border-gray-200 rounded-lg p-5 mb-6 h-80 overflow-y-auto text-sm text-gray-700 space-y-4 leading-relaxed">
+          <p className="font-semibold text-gray-800">Estudio: BurnoutCare — Detección de Burnout Laboral mediante IA</p>
+
+          <div>
+            <p className="font-semibold mb-1">Investigador principal</p>
+            <p>Rubén Beltrán Marañón — Instituto Tecnológico de Orizaba (TecNM) / ReSTORE Lab, Universidad de Toronto. Directora: Dra. Edna Araceli Romero Flores.</p>
+          </div>
+
+          <div>
+            <p className="font-semibold mb-1">Propósito del estudio</p>
+            <p>Este estudio tiene como objetivo desarrollar y validar un sistema de soporte a la decisión clínica para la detección temprana de burnout ocupacional. Tu participación contribuye directamente a mejorar la salud laboral en organizaciones.</p>
+          </div>
+
+          <div>
+            <p className="font-semibold mb-1">¿Qué implica tu participación?</p>
+            <p>Responder el Copenhagen Burnout Inventory (CBI) de 19 preguntas en escala Likert, un perfil demográfico breve y tres preguntas cualitativas opcionales. Tiempo estimado: 10–15 minutos.</p>
+          </div>
+
+          <div>
+            <p className="font-semibold mb-1">Confidencialidad y manejo de datos</p>
+            <p>Tus respuestas se almacenarán en una base de datos segura. Para fines de investigación y publicación, los datos se utilizan de forma agregada y anonimizada — nunca se publicarán datos individuales que permitan identificarte. El acceso a los datos crudos está restringido al equipo de investigación.</p>
+          </div>
+
+          <div>
+            <p className="font-semibold mb-1">Participación voluntaria</p>
+            <p>Tu participación es completamente voluntaria. Puedes abandonar el cuestionario en cualquier momento sin ninguna consecuencia. Si ya enviaste tus respuestas y deseas que sean eliminadas, contáctanos y las removeremos del dataset.</p>
+          </div>
+
+          <div>
+            <p className="font-semibold mb-1">Riesgos y beneficios</p>
+            <p>No existen riesgos significativos asociados a este estudio. Como beneficio, recibirás un análisis personalizado de tu nivel de burnout con recomendaciones específicas generadas por IA.</p>
+          </div>
+
+          <div>
+            <p className="font-semibold mb-1">Contacto</p>
+            <p>¿Tienes preguntas sobre el estudio? Escríbenos a: <span className="font-medium">burnoutcare.research@gmail.com</span></p>
+          </div>
+
+          <p className="text-xs text-gray-400 pt-2">Versión del formulario: {CONSENTIMIENTO_VERSION}</p>
+        </div>
+
+        <label className="flex items-start gap-3 cursor-pointer mb-6 p-4 border-2 rounded-lg transition-colors"
+          style={{ borderColor: consentimientoAceptado ? '#2563EB' : '#D1D5DB', backgroundColor: consentimientoAceptado ? '#EFF6FF' : 'white' }}>
+          <input
+            type="checkbox"
+            className="mt-0.5 w-5 h-5 accent-blue-600 flex-shrink-0"
+            checked={consentimientoAceptado}
+            onChange={e => {
+              setConsentimientoAceptado(e.target.checked);
+              if (e.target.checked) setConsentimientoFecha(new Date().toISOString());
+              else setConsentimientoFecha(null);
+            }}
+          />
+          <span className="text-sm text-gray-700">
+            He leído y comprendo la información de este estudio. Acepto participar de forma voluntaria y doy mi consentimiento para que mis respuestas sean utilizadas con fines de investigación según lo descrito anteriormente.
+          </span>
+        </label>
+
+        <div className="flex gap-3">
+          <button onClick={() => setPaso('inicio')}
+            className="flex-1 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors font-medium flex items-center justify-center gap-2">
+            <ChevronLeft className="w-5 h-5" /> Volver
+          </button>
+          <button
+            onClick={() => consentimientoAceptado && setPaso('datos')}
+            disabled={!consentimientoAceptado}
+            className={`flex-1 py-3 rounded-lg font-medium flex items-center justify-center gap-2 transition-colors
+              ${consentimientoAceptado
+                ? 'bg-blue-600 text-white hover:bg-blue-700 cursor-pointer'
+                : 'bg-gray-200 text-gray-400 cursor-not-allowed'}`}>
+            Acepto y continúo <ChevronRight className="w-5 h-5" />
+          </button>
+        </div>
       </div>
     </div>
   );
