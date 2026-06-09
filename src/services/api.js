@@ -21,7 +21,11 @@ const fetchAPI = async (endpoint, options = {}) => {
     const data = await response.json();
     
     if (!response.ok) {
-      throw new Error(data.error || 'Error en la petición');
+      const err = new Error(data.error || 'Error en la petición');
+      err.status = response.status;
+      err.codigo = data.codigo || null;
+      err.data = data;
+      throw err;
     }
     
     return data;

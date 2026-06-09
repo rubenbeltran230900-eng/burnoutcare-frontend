@@ -64,6 +64,7 @@ const [paso, setPaso] = useState('inicio');
   const [resultado, setResultado] = useState(null);
   const [guardando, setGuardando] = useState(false);
   const [error, setError] = useState('');
+  const [evaluacionExistente, setEvaluacionExistente] = useState(null);
 
   const calcularPuntajes = () => {
     const dimensiones = { BP: [], BL: [], BC: [] };
@@ -128,7 +129,12 @@ const [paso, setPaso] = useState('inicio');
       });
       setPaso('resultado');
     } catch (err) {
-      setError('Error al guardar la evaluación. Intenta de nuevo.');
+      if (err.codigo === 'DUPLICADO') {
+        setEvaluacionExistente(err.data);
+        setPaso('ya-completado');
+      } else {
+        setError('Error al guardar la evaluación. Intenta de nuevo.');
+      }
       console.error(err);
     } finally {
       setGuardando(false);
@@ -146,6 +152,7 @@ const [paso, setPaso] = useState('inicio');
     setPreguntaActual(0);
     setResultado(null);
     setError('');
+    setEvaluacionExistente(null);
   };
 
   const SelectField = ({ label, value, onChange, options }) => (
@@ -280,6 +287,55 @@ const [paso, setPaso] = useState('inicio');
       </div>
     </div>
   );
+
+  // ── YA COMPLETADO (duplicado) ────────────────────────────
+  if (paso === 'ya-completado') {
+    const fechaFormateada = evaluacionExistente?.ultima_fecha
+      ? new Date(evaluacionExistente.ultima_fecha).toLocaleDateString('es-MX', {
+          day: '2-digit', month: 'long', year: 'numeric'
+        })
+      : 'fecha desconocida';
+    const diasRestantes = evaluacionExistente?.ultima_fecha
+      ? 30 - Math.floor((Date.now() - new Date(evaluacionExistente.ultima_fecha)) / 86400000)
+      : 30;
+
+    return (
+      <div className="max-w-2xl mx-auto">
+        <div className="bg-white rounded-xl shadow-lg p-8 text-center">
+          <div className="inline-flex items-center justify-center w-16 h-16 bg-yellow-100 rounded-full mb-4">
+            <CheckCircle className="w-8 h-8 text-yellow-500" />
+          </div>
+          <h2 className="text-xl font-bold text-gray-800 mb-2">Ya completaste tu evaluación</h2>
+          <p className="text-gray-600 mb-6">
+            Registramos tu evaluación el <span className="font-semibold">{fechaFormateada}</span>.
+            Para mantener la integridad del estudio, solo se permite una evaluación cada 30 días.
+          </p>
+
+          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6 text-sm text-blue-700">
+            Podrás realizar una nueva evaluación en aproximadamente{' '}
+            <span className="font-semibold">{diasRestantes} día{diasRestantes !== 1 ? 's' : ''}</span>.
+          </div>
+
+          <div className="flex flex-col gap-3">
+            {evaluacionExistente?.evaluacion_id && onCambiarModulo && (
+              <button
+                onClick={() => onCambiarModulo('recomendaciones')}
+                className="w-full py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium flex items-center justify-center gap-2"
+              >
+                <ClipboardList className="w-5 h-5" /> Ver mis recomendaciones
+              </button>
+            )}
+            <button
+              onClick={reiniciarEvaluacion}
+              className="w-full py-3 border border-gray-300 text-gray-600 rounded-lg hover:bg-gray-50 font-medium"
+            >
+              Volver al inicio
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   // ── DATOS BÁSICOS ────────────────────────────────────────
   if (paso === 'datos') return (
