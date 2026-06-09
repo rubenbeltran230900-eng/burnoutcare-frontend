@@ -8,6 +8,7 @@ const PanelReportesNOM035 = ({ usuario }) => {
   const [error, setError] = useState('');
   const [reporteGenerado, setReporteGenerado] = useState(null);
   const [tipoReporte, setTipoReporte] = useState('general');
+  const [exportandoCSV, setExportandoCSV] = useState(false);
 
   useEffect(() => {
     cargarEvaluaciones();
@@ -318,6 +319,33 @@ Autorizó: _______________________     Fecha: ______________
               >
                 Generar Reporte
               </button>
+
+              <div className="border-t pt-4 mt-2">
+                <p className="text-xs text-gray-500 mb-2">Exportar datos crudos para análisis estadístico / ML:</p>
+                <button
+                  onClick={async () => {
+                    setExportandoCSV(true);
+                    setError('');
+                    try {
+                      await evaluacionesService.exportarCSV(
+                        usuario.rol === 'administrador' ? null : usuario.empresa_id
+                      );
+                    } catch (err) {
+                      setError('Error al exportar CSV. Intenta de nuevo.');
+                    } finally {
+                      setExportandoCSV(false);
+                    }
+                  }}
+                  disabled={evaluaciones.length === 0 || exportandoCSV}
+                  className="w-full py-3 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 disabled:opacity-50 disabled:cursor-not-allowed font-medium flex items-center justify-center gap-2"
+                >
+                  <Download className="w-4 h-4" />
+                  {exportandoCSV ? 'Exportando...' : 'Exportar CSV (datos crudos)'}
+                </button>
+                <p className="text-xs text-gray-400 mt-1">
+                  Incluye los 19 ítems CBI, scores, demografía y consentimiento
+                </p>
+              </div>
             </div>
           </div>
 
