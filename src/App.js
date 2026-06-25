@@ -46,34 +46,34 @@ const cambiarIdioma = (idioma) => {
   // Definición de módulos por rol
   const modulosPorRol = {
     administrador: [
-      { id: 'evaluacion', nombre: 'Evaluación CBI', icono: ClipboardList, descripcion: 'Realizar evaluación de burnout' },
-      { id: 'alertas', nombre: 'Dashboard Alertas', icono: Bell, descripcion: 'Monitoreo de casos críticos' },
-      { id: 'detalle', nombre: 'Detalle de Casos', icono: Users, descripcion: 'Análisis individual de casos' },
-      { id: 'seguimiento', nombre: 'Seguimiento Clínico', icono: Activity, descripcion: 'Seguimiento de intervenciones' },
-      { id: 'indicadores', nombre: 'Indicadores', icono: BarChart3, descripcion: 'Panel de indicadores institucionales' },
-      { id: 'reportes', nombre: 'Reportes NOM-035', icono: FileText, descripcion: 'Generación de reportes normativos' },
-      { id: 'usuarios', nombre: 'Gestión Usuarios', icono: Users, descripcion: 'Administración de usuarios' },
-      { id: 'roles', nombre: 'Roles y Permisos', icono: Shield, descripcion: 'Configuración de accesos' },
-      { id: 'auditoria', nombre: 'Auditoría', icono: Lock, descripcion: 'Registro de actividades' },
-      { id: 'recomendaciones', nombre: 'Recomendaciones IA', icono: Brain, descripcion: 'Motor de recomendaciones inteligentes' },
-{ id: 'empresas', nombre: 'Gestión Empresas', icono: Building2, descripcion: 'Administración de empresas y usuarios' }
+      { id: 'evaluacion',         nombre: t('menu_evaluation'),        icono: ClipboardList, descripcion: t('menu_desc_evaluation') },
+      { id: 'alertas',            nombre: t('menu_alerts'),            icono: Bell,          descripcion: t('menu_desc_alerts') },
+      { id: 'detalle',            nombre: t('menu_cases'),             icono: Users,         descripcion: t('menu_desc_cases') },
+      { id: 'seguimiento',        nombre: t('menu_followup'),          icono: Activity,      descripcion: t('menu_desc_followup') },
+      { id: 'indicadores',        nombre: t('menu_indicators'),        icono: BarChart3,     descripcion: t('menu_desc_indicators') },
+      { id: 'reportes',           nombre: t('menu_reports'),           icono: FileText,      descripcion: t('menu_desc_reports') },
+      { id: 'usuarios',           nombre: t('menu_users'),             icono: Users,         descripcion: t('menu_desc_users') },
+      { id: 'roles',              nombre: t('menu_roles'),             icono: Shield,        descripcion: t('menu_desc_roles') },
+      { id: 'auditoria',          nombre: t('menu_audit'),             icono: Lock,          descripcion: t('menu_desc_audit') },
+      { id: 'recomendaciones',    nombre: t('menu_recommendations'),   icono: Brain,         descripcion: t('menu_desc_recommendations') },
+      { id: 'empresas',           nombre: t('menu_companies'),         icono: Building2,     descripcion: t('menu_desc_companies') },
     ],
     profesional: [
-      { id: 'evaluacion', nombre: 'Evaluación CBI', icono: ClipboardList, descripcion: 'Realizar evaluación de burnout' },
-      { id: 'alertas', nombre: 'Dashboard Alertas', icono: Bell, descripcion: 'Monitoreo de casos críticos' },
-      { id: 'detalle', nombre: 'Detalle de Casos', icono: Users, descripcion: 'Análisis individual de casos' },
-      { id: 'seguimiento', nombre: 'Seguimiento Clínico', icono: Activity, descripcion: 'Seguimiento de intervenciones' },
-      { id: 'recomendaciones', nombre: 'Recomendaciones IA', icono: Brain, descripcion: 'Motor de recomendaciones inteligentes' }
+      { id: 'evaluacion',         nombre: t('menu_evaluation'),        icono: ClipboardList, descripcion: t('menu_desc_evaluation') },
+      { id: 'alertas',            nombre: t('menu_alerts'),            icono: Bell,          descripcion: t('menu_desc_alerts') },
+      { id: 'detalle',            nombre: t('menu_cases'),             icono: Users,         descripcion: t('menu_desc_cases') },
+      { id: 'seguimiento',        nombre: t('menu_followup'),          icono: Activity,      descripcion: t('menu_desc_followup') },
+      { id: 'recomendaciones',    nombre: t('menu_recommendations'),   icono: Brain,         descripcion: t('menu_desc_recommendations') },
     ],
     coordinador: [
-      { id: 'evaluacion', nombre: 'Evaluación CBI', icono: ClipboardList, descripcion: 'Realizar evaluación de burnout' },
-      { id: 'indicadores', nombre: 'Indicadores', icono: BarChart3, descripcion: 'Panel de indicadores institucionales' },
-      { id: 'reportes', nombre: 'Reportes NOM-035', icono: FileText, descripcion: 'Generación de reportes normativos' }
+      { id: 'evaluacion',         nombre: t('menu_evaluation'),        icono: ClipboardList, descripcion: t('menu_desc_evaluation') },
+      { id: 'indicadores',        nombre: t('menu_indicators'),        icono: BarChart3,     descripcion: t('menu_desc_indicators') },
+      { id: 'reportes',           nombre: t('menu_reports'),           icono: FileText,      descripcion: t('menu_desc_reports') },
     ],
     evaluado: [
-  { id: 'evaluacion', nombre: 'Evaluación CBI', icono: ClipboardList, descripcion: 'Realizar evaluación de burnout' },
-  { id: 'mis-recomendaciones', nombre: 'Mis Recomendaciones', icono: Heart, descripcion: 'Ver mis resultados y recomendaciones' },
-]
+      { id: 'evaluacion',          nombre: t('menu_evaluation'),        icono: ClipboardList, descripcion: t('menu_desc_evaluation') },
+      { id: 'mis-recomendaciones', nombre: t('menu_my_recommendations'), icono: Heart,        descripcion: t('menu_desc_my_recommendations') },
+    ],
   };
 
   // Función de login con API
@@ -91,10 +91,10 @@ const cambiarIdioma = (idioma) => {
         setMostrarLogin(false);
         setCredenciales({ email: '', password: '' });
       } else {
-        setErrorLogin(response.error || 'Credenciales incorrectas');
+        setErrorLogin(response.error || t('login_error'));
       }
     } catch (error) {
-      setErrorLogin('Error al conectar con el servidor');
+      setErrorLogin(t('login_server_error'));
     } finally {
       setCargando(false);
     }
@@ -145,8 +145,8 @@ case 'empresas':
           <div className="flex items-center justify-center h-full">
             <div className="text-center">
               <ClipboardList className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-              <h2 className="text-xl font-semibold text-gray-600">Selecciona un módulo</h2>
-              <p className="text-gray-500">Usa el menú lateral para navegar</p>
+              <h2 className="text-xl font-semibold text-gray-600">{t('select_module')}</h2>
+              <p className="text-gray-500">{t('select_module_hint')}</p>
             </div>
           </div>
         );
@@ -168,8 +168,8 @@ case 'empresas':
             <div className="inline-flex items-center justify-center w-20 h-20 bg-white rounded-full shadow-lg mb-4">
               <Shield className="w-10 h-10 text-blue-600" />
             </div>
-            <h1 className="text-3xl font-bold text-white mb-2">BurnoutCare</h1>
-            <p className="text-blue-200">Sistema de Detección y Apoyo</p>
+            <h1 className="text-3xl font-bold text-white mb-2">{t('app_name')}</h1>
+            <p className="text-blue-200">{t('app_subtitle')}</p>
           </div>
 
           {mostrarRegistro ? (
@@ -183,20 +183,20 @@ case 'empresas':
             />
           ) : !mostrarLogin ? (
             <div className="bg-white rounded-2xl shadow-xl p-8">
-              <h2 className="text-xl font-semibold text-gray-800 mb-6 text-center">Iniciar Sesión</h2>
+              <h2 className="text-xl font-semibold text-gray-800 mb-6 text-center">{t('login_title')}</h2>
               <button
                 onClick={() => setMostrarLogin(true)}
                 className="w-full py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
               >
-                Acceder al Sistema
+                {t('login_access')}
               </button>
               <div className="mt-4 text-center">
-                <p className="text-sm text-gray-500">¿Eres colaborador y no tienes cuenta?</p>
+                <p className="text-sm text-gray-500">{t('login_no_account')}</p>
                 <button
                   onClick={() => setMostrarRegistro(true)}
                   className="mt-2 text-blue-600 hover:underline font-medium text-sm"
                 >
-                  Crear cuenta con código de empresa →
+                  {t('login_create_account')}
                 </button>
               </div>
             </div>
@@ -209,17 +209,17 @@ case 'empresas':
                 }}
                 className="mb-4 text-gray-500 hover:text-gray-700 flex items-center gap-1"
               >
-                ← Volver
+                {t('login_back')}
               </button>
               
               <h2 className="text-xl font-semibold text-gray-800 mb-6 text-center">
-                Ingresa tus credenciales
+                {t('login_enter_credentials')}
               </h2>
 
               <form onSubmit={handleLogin} className="space-y-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Correo electrónico
+                    {t('login_email')}
                   </label>
                   <div className="relative">
                     <User className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
@@ -228,7 +228,7 @@ case 'empresas':
                       value={credenciales.email}
                       onChange={(e) => setCredenciales({ ...credenciales, email: e.target.value })}
                       className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                      placeholder="correo@ejemplo.com"
+                      placeholder={t('login_email_placeholder')}
                       required
                     />
                   </div>
@@ -236,7 +236,7 @@ case 'empresas':
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Contraseña
+                    {t('login_password')}
                   </label>
                   <div className="relative">
                     <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
@@ -269,13 +269,13 @@ case 'empresas':
                   disabled={cargando}
                   className="w-full py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  {cargando ? 'Ingresando...' : 'Ingresar'}
+                  {cargando ? t('login_loading') : t('login_button')}
                 </button>
               </form>
 
               <div className="mt-6 p-4 bg-gray-50 rounded-lg">
                 <p className="text-xs text-gray-500 text-center">
-                  <strong>Usuario de prueba:</strong><br />
+                  <strong>{t('login_test_user')}</strong><br />
                   admin@demo.com / 123456
                 </p>
               </div>
@@ -299,7 +299,7 @@ case 'empresas':
                 <Shield className="w-8 h-8" />
                 <div>
                   <h1 className="font-bold">BurnoutCare</h1>
-                  <p className="text-xs text-blue-300">Sistema de Apoyo</p>
+                  <p className="text-xs text-blue-300">{t('app_support_subtitle')}</p>
                 </div>
               </div>
             )}
