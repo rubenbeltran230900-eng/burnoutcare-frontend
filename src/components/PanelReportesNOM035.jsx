@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { FileText, Download, CheckCircle, AlertTriangle, Calendar, Building, Users, RefreshCw } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { evaluacionesService } from '../services/api';
 
 const PanelReportesNOM035 = ({ usuario }) => {
+  const { t } = useTranslation();
   const [evaluaciones, setEvaluaciones] = useState([]);
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState('');
@@ -23,7 +25,7 @@ const PanelReportesNOM035 = ({ usuario }) => {
         setEvaluaciones(response.data);
       }
     } catch (err) {
-      setError('Error al cargar datos');
+      setError(t('msg_connection_error'));
       console.error(err);
     } finally {
       setCargando(false);
@@ -46,20 +48,20 @@ const PanelReportesNOM035 = ({ usuario }) => {
     evaluaciones.forEach(ev => {
       // Conteo por riesgo
       stats.porRiesgo[ev.nivel_riesgo]++;
-      
+
       // Suma para promedios
       stats.promedios.bp += ev.puntaje_bp;
       stats.promedios.bl += ev.puntaje_bl;
       stats.promedios.bc += ev.puntaje_bc;
-      
-      // Por área
+
+      // Por área — 'Sin área' kept as data identifier for object key
       const area = ev.area || 'Sin área';
       if (!stats.porArea[area]) {
         stats.porArea[area] = { total: 0, alto: 0, medio: 0, bajo: 0 };
       }
       stats.porArea[area].total++;
       stats.porArea[area][ev.nivel_riesgo.toLowerCase()]++;
-      
+
       // Fechas
       const fecha = new Date(ev.fecha);
       if (!stats.fechaInicio || fecha < stats.fechaInicio) stats.fechaInicio = fecha;
@@ -93,11 +95,14 @@ const PanelReportesNOM035 = ({ usuario }) => {
     setReporteGenerado(reporte);
   };
 
+  // Note: descargarReporte generates a fixed-format regulatory document in Spanish.
+  // The content of this text file is intentionally kept in Spanish as it is a
+  // compliance document (NOM-035-STPS-2018) that must follow regulatory language.
   const descargarReporte = () => {
     if (!reporteGenerado) return;
 
     const stats = reporteGenerado.estadisticas;
-    
+
     let contenido = `
 ================================================================================
                     REPORTE DE EVALUACIÓN DE RIESGO PSICOSOCIAL
@@ -232,7 +237,7 @@ Autorizó: _______________________     Fecha: ______________
       <div className="flex items-center justify-center h-64">
         <div className="text-center">
           <RefreshCw className="w-8 h-8 text-blue-600 animate-spin mx-auto mb-4" />
-          <p className="text-gray-600">Cargando datos...</p>
+          <p className="text-gray-600">{t('loading')}</p>
         </div>
       </div>
     );
@@ -245,16 +250,16 @@ Autorizó: _______________________     Fecha: ______________
         <div>
           <h1 className="text-2xl font-bold text-gray-800 flex items-center gap-3">
             <FileText className="w-8 h-8 text-blue-600" />
-            Reportes NOM-035
+            {t('reports_title')}
           </h1>
-          <p className="text-gray-600">Generación de reportes de cumplimiento normativo con CBI</p>
+          <p className="text-gray-600">{t('reports_subtitle')}</p>
         </div>
         <button
           onClick={cargarEvaluaciones}
           className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
         >
           <RefreshCw className="w-4 h-4" />
-          Actualizar
+          {t('update')}
         </button>
       </div>
 
@@ -266,11 +271,9 @@ Autorizó: _______________________     Fecha: ______________
 
       {/* Info NOM-035 */}
       <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-6 border border-blue-200">
-        <h3 className="font-semibold text-blue-800 mb-2">Acerca de la NOM-035-STPS-2018</h3>
+        <h3 className="font-semibold text-blue-800 mb-2">{t('reports_nom_title')}</h3>
         <p className="text-blue-700 text-sm">
-          Esta norma establece los elementos para identificar, analizar y prevenir los factores de riesgo psicosocial, 
-          así como promover un entorno organizacional favorable en los centros de trabajo. El uso del Copenhagen Burnout 
-          Inventory (CBI) complementa el cumplimiento de esta normativa al evaluar específicamente el síndrome de burnout.
+          {t('reports_nom_desc')}
         </p>
       </div>
 
@@ -278,29 +281,29 @@ Autorizó: _______________________     Fecha: ______________
         {/* Panel de generación */}
         <div className="lg:col-span-1">
           <div className="bg-white rounded-xl shadow p-6">
-            <h3 className="font-semibold text-gray-800 mb-4">Generar Reporte</h3>
-            
+            <h3 className="font-semibold text-gray-800 mb-4">{t('reports_generate')}</h3>
+
             <div className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Tipo de reporte
+                  {t('reports_type')}
                 </label>
                 <select
                   value={tipoReporte}
                   onChange={(e) => setTipoReporte(e.target.value)}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
                 >
-                  <option value="general">Reporte General</option>
-                  <option value="ejecutivo">Resumen Ejecutivo</option>
-                  <option value="detallado">Reporte Detallado</option>
+                  <option value="general">{t('reports_general')}</option>
+                  <option value="ejecutivo">{t('reports_executive')}</option>
+                  <option value="detallado">{t('reports_detailed')}</option>
                 </select>
               </div>
 
               <div className="p-4 bg-gray-50 rounded-lg">
-                <p className="text-sm text-gray-600 mb-2">Datos disponibles:</p>
+                <p className="text-sm text-gray-600 mb-2">{t('reports_available_data')}</p>
                 <div className="flex items-center gap-2 text-sm">
                   <Users className="w-4 h-4 text-gray-400" />
-                  <span>{evaluaciones.length} evaluaciones</span>
+                  <span>{evaluaciones.length} {t('reports_evaluations_label')}</span>
                 </div>
                 {stats && (
                   <div className="flex items-center gap-2 text-sm mt-1">
@@ -317,11 +320,11 @@ Autorizó: _______________________     Fecha: ______________
                 disabled={evaluaciones.length === 0}
                 className="w-full py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed font-medium"
               >
-                Generar Reporte
+                {t('reports_generate')}
               </button>
 
               <div className="border-t pt-4 mt-2">
-                <p className="text-xs text-gray-500 mb-2">Exportar datos crudos para análisis estadístico / ML:</p>
+                <p className="text-xs text-gray-500 mb-2">{t('reports_csv_desc')}</p>
                 <button
                   onClick={async () => {
                     setExportandoCSV(true);
@@ -331,7 +334,7 @@ Autorizó: _______________________     Fecha: ______________
                         usuario.rol === 'administrador' ? null : usuario.empresa_id
                       );
                     } catch (err) {
-                      setError('Error al exportar CSV. Intenta de nuevo.');
+                      setError(t('reports_err_csv'));
                     } finally {
                       setExportandoCSV(false);
                     }
@@ -340,10 +343,10 @@ Autorizó: _______________________     Fecha: ______________
                   className="w-full py-3 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 disabled:opacity-50 disabled:cursor-not-allowed font-medium flex items-center justify-center gap-2"
                 >
                   <Download className="w-4 h-4" />
-                  {exportandoCSV ? 'Exportando...' : 'Exportar CSV (datos crudos)'}
+                  {exportandoCSV ? t('reports_exporting') : t('reports_export_csv')}
                 </button>
                 <p className="text-xs text-gray-400 mt-1">
-                  Incluye los 19 ítems CBI, scores, demografía y consentimiento
+                  {t('reports_csv_note')}
                 </p>
               </div>
             </div>
@@ -351,14 +354,14 @@ Autorizó: _______________________     Fecha: ______________
 
           {/* Checklist de cumplimiento */}
           <div className="bg-white rounded-xl shadow p-6 mt-6">
-            <h3 className="font-semibold text-gray-800 mb-4">Checklist NOM-035</h3>
+            <h3 className="font-semibold text-gray-800 mb-4">{t('reports_checklist_title')}</h3>
             <div className="space-y-3">
               {[
-                { texto: 'Política de prevención documentada', cumple: true },
-                { texto: 'Identificación de factores de riesgo', cumple: evaluaciones.length > 0 },
-                { texto: 'Evaluación del entorno organizacional', cumple: evaluaciones.length >= 5 },
-                { texto: 'Medidas de prevención implementadas', cumple: false },
-                { texto: 'Capacitación a trabajadores', cumple: false }
+                { textoKey: 'reports_check_policy', cumple: true },
+                { textoKey: 'reports_check_factors', cumple: evaluaciones.length > 0 },
+                { textoKey: 'reports_check_env', cumple: evaluaciones.length >= 5 },
+                { textoKey: 'reports_check_measures', cumple: false },
+                { textoKey: 'reports_check_training', cumple: false }
               ].map((item, idx) => (
                 <div key={idx} className="flex items-center gap-3">
                   {item.cumple ? (
@@ -367,7 +370,7 @@ Autorizó: _______________________     Fecha: ______________
                     <AlertTriangle className="w-5 h-5 text-yellow-500" />
                   )}
                   <span className={`text-sm ${item.cumple ? 'text-gray-700' : 'text-gray-500'}`}>
-                    {item.texto}
+                    {t(item.textoKey)}
                   </span>
                 </div>
               ))}
@@ -379,14 +382,14 @@ Autorizó: _______________________     Fecha: ______________
         <div className="lg:col-span-2">
           <div className="bg-white rounded-xl shadow p-6">
             <div className="flex justify-between items-center mb-4">
-              <h3 className="font-semibold text-gray-800">Vista Previa del Reporte</h3>
+              <h3 className="font-semibold text-gray-800">{t('reports_preview')}</h3>
               {reporteGenerado && (
                 <button
                   onClick={descargarReporte}
                   className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
                 >
                   <Download className="w-4 h-4" />
-                  Descargar
+                  {t('reports_download')}
                 </button>
               )}
             </div>
@@ -394,7 +397,7 @@ Autorizó: _______________________     Fecha: ______________
             {!reporteGenerado ? (
               <div className="text-center py-12 text-gray-500">
                 <FileText className="w-16 h-16 mx-auto mb-4 text-gray-300" />
-                <p>Genera un reporte para ver la vista previa</p>
+                <p>{t('reports_preview_hint')}</p>
               </div>
             ) : (
               <div className="border rounded-lg p-6 bg-gray-50 max-h-[600px] overflow-y-auto">
@@ -409,22 +412,22 @@ Autorizó: _______________________     Fecha: ______________
 
                 {/* Info general */}
                 <div className="mb-6">
-                  <h4 className="font-semibold text-gray-700 mb-2">Información General</h4>
+                  <h4 className="font-semibold text-gray-700 mb-2">{t('reports_general_info')}</h4>
                   <div className="grid grid-cols-2 gap-4 text-sm">
                     <div>
-                      <span className="text-gray-500">Empresa:</span>
-                      <span className="ml-2 font-medium">{reporteGenerado.empresa || 'No especificada'}</span>
+                      <span className="text-gray-500">{t('reports_label_company')}</span>
+                      <span className="ml-2 font-medium">{reporteGenerado.empresa || t('reports_not_specified')}</span>
                     </div>
                     <div>
-                      <span className="text-gray-500">Fecha:</span>
+                      <span className="text-gray-500">{t('reports_label_date')}</span>
                       <span className="ml-2 font-medium">{formatearFecha(reporteGenerado.fechaGeneracion)}</span>
                     </div>
                     <div>
-                      <span className="text-gray-500">Generado por:</span>
+                      <span className="text-gray-500">{t('reports_label_generated_by')}</span>
                       <span className="ml-2 font-medium">{reporteGenerado.generadoPor}</span>
                     </div>
                     <div>
-                      <span className="text-gray-500">Total evaluaciones:</span>
+                      <span className="text-gray-500">{t('reports_label_total')}</span>
                       <span className="ml-2 font-medium">{stats?.total || 0}</span>
                     </div>
                   </div>
@@ -432,25 +435,25 @@ Autorizó: _______________________     Fecha: ______________
 
                 {/* Distribución */}
                 <div className="mb-6">
-                  <h4 className="font-semibold text-gray-700 mb-3">Distribución por Nivel de Riesgo</h4>
+                  <h4 className="font-semibold text-gray-700 mb-3">{t('indicators_distribution')}</h4>
                   <div className="grid grid-cols-3 gap-4">
                     <div className="p-4 bg-red-100 rounded-lg text-center">
                       <p className="text-2xl font-bold text-red-700">{stats?.porRiesgo.Alto || 0}</p>
-                      <p className="text-sm text-red-600">Riesgo Alto</p>
+                      <p className="text-sm text-red-600">{t('risk_high')}</p>
                       <p className="text-xs text-red-500">
                         {stats ? Math.round(stats.porRiesgo.Alto / stats.total * 100) : 0}%
                       </p>
                     </div>
                     <div className="p-4 bg-yellow-100 rounded-lg text-center">
                       <p className="text-2xl font-bold text-yellow-700">{stats?.porRiesgo.Medio || 0}</p>
-                      <p className="text-sm text-yellow-600">Riesgo Medio</p>
+                      <p className="text-sm text-yellow-600">{t('risk_medium')}</p>
                       <p className="text-xs text-yellow-500">
                         {stats ? Math.round(stats.porRiesgo.Medio / stats.total * 100) : 0}%
                       </p>
                     </div>
                     <div className="p-4 bg-green-100 rounded-lg text-center">
                       <p className="text-2xl font-bold text-green-700">{stats?.porRiesgo.Bajo || 0}</p>
-                      <p className="text-sm text-green-600">Riesgo Bajo</p>
+                      <p className="text-sm text-green-600">{t('risk_low')}</p>
                       <p className="text-xs text-green-500">
                         {stats ? Math.round(stats.porRiesgo.Bajo / stats.total * 100) : 0}%
                       </p>
@@ -460,15 +463,15 @@ Autorizó: _______________________     Fecha: ______________
 
                 {/* Promedios CBI */}
                 <div className="mb-6">
-                  <h4 className="font-semibold text-gray-700 mb-3">Promedios Institucionales CBI</h4>
+                  <h4 className="font-semibold text-gray-700 mb-3">{t('indicators_averages')}</h4>
                   <div className="space-y-3">
                     <div>
                       <div className="flex justify-between text-sm mb-1">
-                        <span>Burnout Personal (BP)</span>
+                        <span>{t('indicators_dim_personal_label')}</span>
                         <span className="font-medium">{stats?.promedios.bp || 0}/100</span>
                       </div>
                       <div className="w-full bg-gray-200 rounded-full h-3">
-                        <div 
+                        <div
                           className={`h-3 rounded-full ${(stats?.promedios.bp || 0) >= 75 ? 'bg-red-500' : (stats?.promedios.bp || 0) >= 50 ? 'bg-yellow-500' : 'bg-green-500'}`}
                           style={{ width: `${stats?.promedios.bp || 0}%` }}
                         />
@@ -476,11 +479,11 @@ Autorizó: _______________________     Fecha: ______________
                     </div>
                     <div>
                       <div className="flex justify-between text-sm mb-1">
-                        <span>Burnout Laboral (BL)</span>
+                        <span>{t('indicators_dim_work_label')}</span>
                         <span className="font-medium">{stats?.promedios.bl || 0}/100</span>
                       </div>
                       <div className="w-full bg-gray-200 rounded-full h-3">
-                        <div 
+                        <div
                           className={`h-3 rounded-full ${(stats?.promedios.bl || 0) >= 75 ? 'bg-red-500' : (stats?.promedios.bl || 0) >= 50 ? 'bg-yellow-500' : 'bg-green-500'}`}
                           style={{ width: `${stats?.promedios.bl || 0}%` }}
                         />
@@ -488,11 +491,11 @@ Autorizó: _______________________     Fecha: ______________
                     </div>
                     <div>
                       <div className="flex justify-between text-sm mb-1">
-                        <span>Burnout por Cliente (BC)</span>
+                        <span>{t('indicators_dim_client_label')}</span>
                         <span className="font-medium">{stats?.promedios.bc || 0}/100</span>
                       </div>
                       <div className="w-full bg-gray-200 rounded-full h-3">
-                        <div 
+                        <div
                           className={`h-3 rounded-full ${(stats?.promedios.bc || 0) >= 75 ? 'bg-red-500' : (stats?.promedios.bc || 0) >= 50 ? 'bg-yellow-500' : 'bg-green-500'}`}
                           style={{ width: `${stats?.promedios.bc || 0}%` }}
                         />
@@ -503,16 +506,16 @@ Autorizó: _______________________     Fecha: ______________
 
                 {/* Escala de referencia */}
                 <div className="p-4 bg-blue-50 rounded-lg">
-                  <h4 className="font-medium text-blue-800 mb-2">Escala de Referencia CBI</h4>
+                  <h4 className="font-medium text-blue-800 mb-2">{t('reports_scale_title')}</h4>
                   <div className="flex gap-4 text-sm">
                     <span className="flex items-center gap-1">
-                      <div className="w-3 h-3 bg-green-500 rounded" /> 0-49: Bajo
+                      <div className="w-3 h-3 bg-green-500 rounded" /> {t('scale_low')}
                     </span>
                     <span className="flex items-center gap-1">
-                      <div className="w-3 h-3 bg-yellow-500 rounded" /> 50-74: Medio
+                      <div className="w-3 h-3 bg-yellow-500 rounded" /> {t('scale_medium')}
                     </span>
                     <span className="flex items-center gap-1">
-                      <div className="w-3 h-3 bg-red-500 rounded" /> 75-100: Alto
+                      <div className="w-3 h-3 bg-red-500 rounded" /> {t('scale_high')}
                     </span>
                   </div>
                 </div>
