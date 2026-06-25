@@ -80,7 +80,7 @@
   "eval_saving": "Guardando...",
   "eval_save_error": "Error al guardar la evaluación. Intenta de nuevo.",
   "eval_already_done_title": "Evaluación Ya Completada",
-  "eval_already_done_desc": "Ya tienes una evaluación enviada.",
+  "eval_already_done_desc": "Ya completaste una evaluación el {{date}}. Solo se permite una evaluación cada 30 días.",
   "consent_title": "Consentimiento Informado",
   "consent_step": "Paso 1 de 4",
   "consent_accept": "He leído y acepto los términos",

@@ -80,7 +80,7 @@
   "eval_saving": "Saving...",
   "eval_save_error": "Error saving the evaluation. Please try again.",
   "eval_already_done_title": "Evaluation Already Completed",
-  "eval_already_done_desc": "You have already submitted an evaluation.",
+  "eval_already_done_desc": "You already completed an evaluation on {{date}}. Only one evaluation is allowed every 30 days.",
   "consent_title": "Informed Consent",
   "consent_step": "Step 1 of 4",
   "consent_accept": "I have read and accept the terms",

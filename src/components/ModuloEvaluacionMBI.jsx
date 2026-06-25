@@ -312,8 +312,8 @@ const ModuloEvaluacionMBI = ({ usuario, onCambiarModulo }) => {
             <CheckCircle className="w-8 h-8 text-yellow-500" />
           </div>
           <h2 className="text-xl font-bold text-gray-800 mb-2">{t('eval_already_done_title')}</h2>
-          <p className="text-gray-600 mb-6">
-            {t('eval_already_done_desc')} <span className="font-semibold">{fechaFormateada}</span>.
+          <p className="text-gray-600 text-sm">
+            {t('eval_already_done_desc', { date: fechaFormateada })}
           </p>
 
           <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6 text-sm text-blue-700">
