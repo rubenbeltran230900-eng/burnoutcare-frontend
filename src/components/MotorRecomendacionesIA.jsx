@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Brain, RefreshCw, AlertTriangle, CheckCircle, Clock, User, ChevronDown, ChevronUp } from 'lucide-react';
 import { evaluacionesService, recomendacionesService } from '../services/api';
 
 const MotorRecomendacionesIA = ({ usuario }) => {
+  const { t } = useTranslation();
   const [evaluaciones, setEvaluaciones] = useState([]);
   const [evaluacionSeleccionada, setEvaluacionSeleccionada] = useState(null);
   const [recomendacion, setRecomendacion] = useState(null);
@@ -11,7 +13,6 @@ const MotorRecomendacionesIA = ({ usuario }) => {
   const [error, setError] = useState('');
   const [seccionesAbiertas, setSeccionesAbiertas] = useState({});
 
-  // Cargar evaluaciones al montar
   useEffect(() => {
     cargarEvaluaciones();
   }, []);
@@ -25,7 +26,7 @@ const MotorRecomendacionesIA = ({ usuario }) => {
         setEvaluaciones(response.data);
       }
     } catch (err) {
-      setError('Error al cargar evaluaciones');
+      setError(t('msg_connection_error'));
       console.error(err);
     } finally {
       setCargando(false);
@@ -36,7 +37,7 @@ const MotorRecomendacionesIA = ({ usuario }) => {
     setGenerando(true);
     setError('');
     setRecomendacion(null);
-    
+
     try {
       const response = await recomendacionesService.generar(evaluacionId);
       if (response.success) {
@@ -50,10 +51,10 @@ const MotorRecomendacionesIA = ({ usuario }) => {
           seguimiento: false
         });
       } else {
-        setError(response.error || 'Error al generar recomendación');
+        setError(response.error || t('msg_connection_error'));
       }
     } catch (err) {
-      setError('Error de conexión con el servidor');
+      setError(t('msg_connection_error'));
       console.error(err);
     } finally {
       setGenerando(false);
@@ -67,6 +68,7 @@ const MotorRecomendacionesIA = ({ usuario }) => {
     }));
   };
 
+  // nivel_riesgo values ('Alto', 'Medio', 'Bajo') come from backend — kept as-is for color mapping
   const getColorRiesgo = (nivel) => {
     switch (nivel) {
       case 'Alto': return 'text-red-600 bg-red-100';
@@ -76,6 +78,7 @@ const MotorRecomendacionesIA = ({ usuario }) => {
     }
   };
 
+  // nivel_urgencia values ('ALTA', 'MEDIA', 'BAJA') come from backend — kept as-is for color mapping
   const getColorUrgencia = (urgencia) => {
     switch (urgencia) {
       case 'ALTA': return 'text-red-600 bg-red-100 border-red-300';
@@ -100,7 +103,7 @@ const MotorRecomendacionesIA = ({ usuario }) => {
       <div className="flex items-center justify-center h-64">
         <div className="text-center">
           <RefreshCw className="w-8 h-8 text-blue-600 animate-spin mx-auto mb-4" />
-          <p className="text-gray-600">Cargando...</p>
+          <p className="text-gray-600">{t('loading')}</p>
         </div>
       </div>
     );
@@ -113,9 +116,9 @@ const MotorRecomendacionesIA = ({ usuario }) => {
         <div>
           <h1 className="text-2xl font-bold text-gray-800 flex items-center gap-3">
             <Brain className="w-8 h-8 text-purple-600" />
-            Motor de Recomendaciones IA
+            {t('rec_title')}
           </h1>
-          <p className="text-gray-600">Genera recomendaciones personalizadas usando inteligencia artificial</p>
+          <p className="text-gray-600">{t('rec_subtitle')}</p>
         </div>
       </div>
 
@@ -129,10 +132,10 @@ const MotorRecomendacionesIA = ({ usuario }) => {
         {/* Lista de evaluaciones */}
         <div className="lg:col-span-1">
           <div className="bg-white rounded-xl shadow p-4">
-            <h2 className="font-semibold text-gray-800 mb-4">Evaluaciones Disponibles</h2>
-            
+            <h2 className="font-semibold text-gray-800 mb-4">{t('rec_available_evals')}</h2>
+
             {evaluaciones.length === 0 ? (
-              <p className="text-gray-500 text-center py-8">No hay evaluaciones</p>
+              <p className="text-gray-500 text-center py-8">{t('rec_no_evals')}</p>
             ) : (
               <div className="space-y-2 max-h-[600px] overflow-y-auto">
                 {evaluaciones.map((ev) => (
@@ -148,14 +151,17 @@ const MotorRecomendacionesIA = ({ usuario }) => {
                     <div className="flex justify-between items-start">
                       <div>
                         <p className="font-medium text-gray-800">{ev.usuario_nombre}</p>
-                        <p className="text-sm text-gray-500">{ev.area || 'Sin área'}</p>
+                        {/* ev.area is user data kept as-is */}
+                        <p className="text-sm text-gray-500">{ev.area || t('rec_no_area')}</p>
                         <p className="text-xs text-gray-400 mt-1">{formatearFecha(ev.fecha)}</p>
                       </div>
+                      {/* ev.nivel_riesgo is a backend data value kept as-is */}
                       <span className={`px-2 py-1 rounded-full text-xs font-medium ${getColorRiesgo(ev.nivel_riesgo)}`}>
                         {ev.nivel_riesgo}
                       </span>
                     </div>
                     <div className="mt-2 grid grid-cols-3 gap-1 text-xs">
+                      {/* BP, BL, BC are CBI dimension abbreviations (data identifiers) kept as-is */}
                       <div className="text-center p-1 bg-white rounded">
                         <span className="text-gray-500">BP:</span> {ev.puntaje_bp}
                       </div>
@@ -179,8 +185,8 @@ const MotorRecomendacionesIA = ({ usuario }) => {
             {!evaluacionSeleccionada ? (
               <div className="text-center py-12">
                 <Brain className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-                <h3 className="text-lg font-medium text-gray-600">Selecciona una evaluación</h3>
-                <p className="text-gray-500">Elige una evaluación de la lista para generar recomendaciones</p>
+                <h3 className="text-lg font-medium text-gray-600">{t('rec_select_eval')}</h3>
+                <p className="text-gray-500">{t('rec_select_eval_hint')}</p>
               </div>
             ) : (
               <>
@@ -203,12 +209,12 @@ const MotorRecomendacionesIA = ({ usuario }) => {
                     {generando ? (
                       <>
                         <RefreshCw className="w-4 h-4 animate-spin" />
-                        Generando...
+                        {t('rec_generating')}
                       </>
                     ) : (
                       <>
                         <Brain className="w-4 h-4" />
-                        Generar Recomendación
+                        {t('rec_generate')}
                       </>
                     )}
                   </button>
@@ -218,9 +224,10 @@ const MotorRecomendacionesIA = ({ usuario }) => {
                 {recomendacion && recomendacion.contenido && (
                   <div className="space-y-4">
                     {/* Tipo de recomendación */}
+                    {/* recomendacion.tipo values ('IA', other) are backend data identifiers kept as-is */}
                     <div className="flex items-center gap-2 text-sm">
                       <span className={`px-2 py-1 rounded ${recomendacion.tipo === 'IA' ? 'bg-purple-100 text-purple-700' : 'bg-blue-100 text-blue-700'}`}>
-                        {recomendacion.tipo === 'IA' ? '🤖 Generado por IA' : '📋 Basado en reglas'}
+                        {recomendacion.tipo === 'IA' ? `🤖 ${t('rec_ai')}` : `📋 ${t('rec_rules')}`}
                       </span>
                       <span className="text-gray-500">
                         <Clock className="w-4 h-4 inline mr-1" />
@@ -229,10 +236,11 @@ const MotorRecomendacionesIA = ({ usuario }) => {
                     </div>
 
                     {/* Urgencia */}
+                    {/* nivel_urgencia is a backend data value kept as-is for color mapping */}
                     <div className={`p-4 rounded-lg border-2 ${getColorUrgencia(recomendacion.contenido.nivel_urgencia)}`}>
                       <div className="flex items-center gap-2">
                         <AlertTriangle className="w-5 h-5" />
-                        <span className="font-semibold">Nivel de Urgencia: {recomendacion.contenido.nivel_urgencia}</span>
+                        <span className="font-semibold">{t('rec_urgency_label')} {recomendacion.contenido.nivel_urgencia}</span>
                       </div>
                     </div>
 
@@ -242,7 +250,7 @@ const MotorRecomendacionesIA = ({ usuario }) => {
                         onClick={() => toggleSeccion('analisis')}
                         className="w-full p-4 flex justify-between items-center hover:bg-gray-50"
                       >
-                        <span className="font-semibold text-gray-800">Análisis General</span>
+                        <span className="font-semibold text-gray-800">{t('rec_analysis')}</span>
                         {seccionesAbiertas.analisis ? <ChevronUp /> : <ChevronDown />}
                       </button>
                       {seccionesAbiertas.analisis && (
@@ -258,13 +266,14 @@ const MotorRecomendacionesIA = ({ usuario }) => {
                         onClick={() => toggleSeccion('dimensiones')}
                         className="w-full p-4 flex justify-between items-center hover:bg-gray-50"
                       >
-                        <span className="font-semibold text-gray-800">Análisis por Dimensión</span>
+                        <span className="font-semibold text-gray-800">{t('rec_dimensions')}</span>
                         {seccionesAbiertas.dimensiones ? <ChevronUp /> : <ChevronDown />}
                       </button>
                       {seccionesAbiertas.dimensiones && recomendacion.contenido.dimensiones && (
                         <div className="p-4 pt-0 space-y-4">
                           {Object.entries(recomendacion.contenido.dimensiones).map(([key, dim]) => (
                             <div key={key} className="p-3 bg-gray-50 rounded-lg">
+                              {/* dimension key is a backend data identifier kept as-is */}
                               <h4 className="font-medium text-gray-800 capitalize mb-2">
                                 {key.replace(/_/g, ' ')}
                               </h4>
@@ -290,7 +299,7 @@ const MotorRecomendacionesIA = ({ usuario }) => {
                         onClick={() => toggleSeccion('inmediatas')}
                         className="w-full p-4 flex justify-between items-center hover:bg-gray-50"
                       >
-                        <span className="font-semibold text-gray-800">🚨 Recomendaciones Inmediatas</span>
+                        <span className="font-semibold text-gray-800">🚨 {t('rec_immediate')}</span>
                         {seccionesAbiertas.inmediatas ? <ChevronUp /> : <ChevronDown />}
                       </button>
                       {seccionesAbiertas.inmediatas && recomendacion.contenido.recomendaciones_inmediatas && (
@@ -298,6 +307,7 @@ const MotorRecomendacionesIA = ({ usuario }) => {
                           <div className="space-y-3">
                             {recomendacion.contenido.recomendaciones_inmediatas.map((rec, idx) => (
                               <div key={idx} className="p-3 bg-red-50 rounded-lg border border-red-100">
+                                {/* rec.accion, rec.responsable, rec.plazo are backend data kept as-is */}
                                 <p className="font-medium text-gray-800">{rec.accion}</p>
                                 <div className="flex gap-4 mt-2 text-sm text-gray-600">
                                   <span>👤 {rec.responsable}</span>
@@ -316,7 +326,7 @@ const MotorRecomendacionesIA = ({ usuario }) => {
                         onClick={() => toggleSeccion('mediano')}
                         className="w-full p-4 flex justify-between items-center hover:bg-gray-50"
                       >
-                        <span className="font-semibold text-gray-800">📅 Recomendaciones a Mediano Plazo</span>
+                        <span className="font-semibold text-gray-800">📅 {t('rec_medium')}</span>
                         {seccionesAbiertas.mediano ? <ChevronUp /> : <ChevronDown />}
                       </button>
                       {seccionesAbiertas.mediano && recomendacion.contenido.recomendaciones_mediano_plazo && (
@@ -342,7 +352,7 @@ const MotorRecomendacionesIA = ({ usuario }) => {
                         onClick={() => toggleSeccion('autocuidado')}
                         className="w-full p-4 flex justify-between items-center hover:bg-gray-50"
                       >
-                        <span className="font-semibold text-gray-800">💚 Técnicas de Autocuidado</span>
+                        <span className="font-semibold text-gray-800">💚 {t('rec_selfcare')}</span>
                         {seccionesAbiertas.autocuidado ? <ChevronUp /> : <ChevronDown />}
                       </button>
                       {seccionesAbiertas.autocuidado && recomendacion.contenido.tecnicas_autocuidado && (
@@ -351,6 +361,7 @@ const MotorRecomendacionesIA = ({ usuario }) => {
                             {recomendacion.contenido.tecnicas_autocuidado.map((tecnica, idx) => (
                               <li key={idx} className="flex items-start gap-2">
                                 <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
+                                {/* tecnica is backend AI-generated content kept as-is */}
                                 <span className="text-gray-700">{tecnica}</span>
                               </li>
                             ))}
@@ -365,19 +376,20 @@ const MotorRecomendacionesIA = ({ usuario }) => {
                         onClick={() => toggleSeccion('seguimiento')}
                         className="w-full p-4 flex justify-between items-center hover:bg-gray-50"
                       >
-                        <span className="font-semibold text-gray-800">📊 Plan de Seguimiento</span>
+                        <span className="font-semibold text-gray-800">📊 {t('rec_followup')}</span>
                         {seccionesAbiertas.seguimiento ? <ChevronUp /> : <ChevronDown />}
                       </button>
                       {seccionesAbiertas.seguimiento && recomendacion.contenido.seguimiento && (
                         <div className="p-4 pt-0 space-y-4">
                           <div className="p-3 bg-purple-50 rounded-lg">
-                            <p className="text-sm text-gray-600">Próxima evaluación</p>
+                            <p className="text-sm text-gray-600">{t('rec_next_eval')}</p>
+                            {/* proxima_evaluacion is backend data kept as-is */}
                             <p className="font-medium text-purple-700">{recomendacion.contenido.seguimiento.proxima_evaluacion}</p>
                           </div>
-                          
+
                           <div className="grid grid-cols-2 gap-4">
                             <div>
-                              <p className="text-sm font-medium text-green-700 mb-2">✅ Indicadores de mejora</p>
+                              <p className="text-sm font-medium text-green-700 mb-2">✅ {t('rec_improvement')}</p>
                               <ul className="text-sm space-y-1">
                                 {recomendacion.contenido.seguimiento.indicadores_mejora?.map((ind, idx) => (
                                   <li key={idx} className="text-gray-600">• {ind}</li>
@@ -385,7 +397,7 @@ const MotorRecomendacionesIA = ({ usuario }) => {
                               </ul>
                             </div>
                             <div>
-                              <p className="text-sm font-medium text-red-700 mb-2">⚠️ Indicadores de empeoramiento</p>
+                              <p className="text-sm font-medium text-red-700 mb-2">⚠️ {t('rec_worsening')}</p>
                               <ul className="text-sm space-y-1">
                                 {recomendacion.contenido.seguimiento.indicadores_empeoramiento?.map((ind, idx) => (
                                   <li key={idx} className="text-gray-600">• {ind}</li>
@@ -400,7 +412,8 @@ const MotorRecomendacionesIA = ({ usuario }) => {
                     {/* Mensaje personalizado */}
                     {recomendacion.contenido.mensaje_personalizado && (
                       <div className="p-4 bg-gradient-to-r from-purple-50 to-blue-50 rounded-lg border border-purple-200">
-                        <p className="text-sm text-gray-500 mb-1">💬 Mensaje para el colaborador</p>
+                        <p className="text-sm text-gray-500 mb-1">💬 {t('rec_personal_message')}</p>
+                        {/* mensaje_personalizado is AI-generated content kept as-is */}
                         <p className="text-gray-700 italic">"{recomendacion.contenido.mensaje_personalizado}"</p>
                       </div>
                     )}
