@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Users, Plus, Edit, Trash2, Search, RefreshCw, X, Save, Eye, EyeOff } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { usuariosService } from '../services/api';
 
 const GestionUsuarios = ({ usuario }) => {
+  const { t } = useTranslation();
   const [usuarios, setUsuarios] = useState([]);
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState('');
@@ -33,10 +35,10 @@ const GestionUsuarios = ({ usuario }) => {
       if (response.success) {
         setUsuarios(response.data);
       } else {
-        setError(response.error || 'Error al cargar usuarios');
+        setError(response.error || t('users_err_load'));
       }
     } catch (err) {
-      setError('Error de conexión con el servidor');
+      setError(t('msg_connection_error'));
       console.error(err);
     } finally {
       setCargando(false);
@@ -84,12 +86,12 @@ const GestionUsuarios = ({ usuario }) => {
 
   const guardarUsuario = async () => {
     if (!usuarioEditando.nombre || !usuarioEditando.email) {
-      setError('Nombre y email son requeridos');
+      setError(t('users_err_required'));
       return;
     }
 
     if (!modoEdicion && !usuarioEditando.password) {
-      setError('La contraseña es requerida para nuevos usuarios');
+      setError(t('users_err_password_required'));
       return;
     }
 
@@ -98,7 +100,7 @@ const GestionUsuarios = ({ usuario }) => {
 
     try {
       let response;
-      
+
       if (modoEdicion) {
         // Preparar datos para actualización
         const datosActualizar = {
@@ -109,12 +111,12 @@ const GestionUsuarios = ({ usuario }) => {
           puesto: usuarioEditando.puesto,
           activo: usuarioEditando.activo
         };
-        
+
         // Solo incluir password si se proporcionó uno nuevo
         if (usuarioEditando.password) {
           datosActualizar.password = usuarioEditando.password;
         }
-        
+
         response = await usuariosService.actualizar(usuarioEditando.id, datosActualizar);
       } else {
         response = await usuariosService.crear({
@@ -127,10 +129,10 @@ const GestionUsuarios = ({ usuario }) => {
         cerrarModal();
         cargarUsuarios();
       } else {
-        setError(response.error || 'Error al guardar usuario');
+        setError(response.error || t('users_err_save'));
       }
     } catch (err) {
-      setError('Error de conexión con el servidor');
+      setError(t('msg_connection_error'));
       console.error(err);
     } finally {
       setGuardando(false);
@@ -138,7 +140,7 @@ const GestionUsuarios = ({ usuario }) => {
   };
 
   const eliminarUsuario = async (id) => {
-    if (!window.confirm('¿Estás seguro de eliminar este usuario?')) {
+    if (!window.confirm(t('users_delete_confirm'))) {
       return;
     }
 
@@ -147,10 +149,10 @@ const GestionUsuarios = ({ usuario }) => {
       if (response.success) {
         cargarUsuarios();
       } else {
-        setError(response.error || 'Error al eliminar usuario');
+        setError(response.error || t('users_err_delete'));
       }
     } catch (err) {
-      setError('Error de conexión con el servidor');
+      setError(t('msg_connection_error'));
       console.error(err);
     }
   };
@@ -176,7 +178,7 @@ const GestionUsuarios = ({ usuario }) => {
       <div className="flex items-center justify-center h-64">
         <div className="text-center">
           <RefreshCw className="w-8 h-8 text-blue-600 animate-spin mx-auto mb-4" />
-          <p className="text-gray-600">Cargando usuarios...</p>
+          <p className="text-gray-600">{t('users_loading')}</p>
         </div>
       </div>
     );
@@ -189,9 +191,9 @@ const GestionUsuarios = ({ usuario }) => {
         <div>
           <h1 className="text-2xl font-bold text-gray-800 flex items-center gap-3">
             <Users className="w-8 h-8 text-blue-600" />
-            Gestión de Usuarios
+            {t('users_title')}
           </h1>
-          <p className="text-gray-600">Administración de usuarios del sistema BurnoutCare</p>
+          <p className="text-gray-600">{t('users_subtitle')}</p>
         </div>
         <div className="flex gap-2">
           <button
@@ -199,14 +201,14 @@ const GestionUsuarios = ({ usuario }) => {
             className="flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50"
           >
             <RefreshCw className="w-4 h-4" />
-            Actualizar
+            {t('users_refresh')}
           </button>
           <button
             onClick={abrirModalNuevo}
             className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
           >
             <Plus className="w-4 h-4" />
-            Nuevo Usuario
+            {t('users_new')}
           </button>
         </div>
       </div>
@@ -223,7 +225,7 @@ const GestionUsuarios = ({ usuario }) => {
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
           <input
             type="text"
-            placeholder="Buscar por nombre, email o área..."
+            placeholder={t('users_search_placeholder')}
             value={busqueda}
             onChange={(e) => setBusqueda(e.target.value)}
             className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
@@ -237,20 +239,20 @@ const GestionUsuarios = ({ usuario }) => {
           <table className="w-full">
             <thead className="bg-gray-50">
               <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Nombre</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Email</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Rol</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Área</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Puesto</th>
-                <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase">Estado</th>
-                <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase">Acciones</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('users_name')}</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('users_email')}</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('users_role')}</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('users_area')}</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('users_position')}</th>
+                <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase">{t('users_status')}</th>
+                <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase">{t('users_actions')}</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200">
               {usuariosFiltrados.length === 0 ? (
                 <tr>
                   <td colSpan="7" className="px-6 py-12 text-center text-gray-500">
-                    No hay usuarios que mostrar
+                    {t('msg_no_users')}
                   </td>
                 </tr>
               ) : (
@@ -275,7 +277,7 @@ const GestionUsuarios = ({ usuario }) => {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-center">
                       <span className={`px-2 py-1 rounded-full text-xs font-medium ${usr.activo ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
-                        {usr.activo ? 'Activo' : 'Inactivo'}
+                        {usr.activo ? t('users_active') : t('users_inactive')}
                       </span>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-center">
@@ -283,14 +285,14 @@ const GestionUsuarios = ({ usuario }) => {
                         <button
                           onClick={() => abrirModalEditar(usr)}
                           className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg"
-                          title="Editar"
+                          title={t('edit')}
                         >
                           <Edit className="w-4 h-4" />
                         </button>
                         <button
                           onClick={() => eliminarUsuario(usr.id)}
                           className="p-2 text-red-600 hover:bg-red-50 rounded-lg"
-                          title="Eliminar"
+                          title={t('delete')}
                           disabled={usr.id === usuario.id}
                         >
                           <Trash2 className="w-4 h-4" />
@@ -327,7 +329,7 @@ const GestionUsuarios = ({ usuario }) => {
           <div className="bg-white rounded-xl shadow-xl w-full max-w-md mx-4">
             <div className="flex justify-between items-center p-6 border-b">
               <h3 className="text-lg font-semibold text-gray-800">
-                {modoEdicion ? 'Editar Usuario' : 'Nuevo Usuario'}
+                {modoEdicion ? t('users_edit') : t('users_new')}
               </h3>
               <button onClick={cerrarModal} className="text-gray-400 hover:text-gray-600">
                 <X className="w-5 h-5" />
@@ -342,18 +344,18 @@ const GestionUsuarios = ({ usuario }) => {
               )}
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Nombre completo *</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">{t('users_name')} *</label>
                 <input
                   type="text"
                   value={usuarioEditando.nombre}
                   onChange={(e) => setUsuarioEditando({ ...usuarioEditando, nombre: e.target.value })}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-                  placeholder="Nombre del usuario"
+                  placeholder={t('users_full_name_placeholder')}
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Email *</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">{t('users_email')} *</label>
                 <input
                   type="email"
                   value={usuarioEditando.email}
@@ -365,7 +367,7 @@ const GestionUsuarios = ({ usuario }) => {
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Contraseña {modoEdicion ? '(dejar vacío para mantener actual)' : '*'}
+                  {t('users_password')} {modoEdicion ? t('users_password_keep') : '*'}
                 </label>
                 <div className="relative">
                   <input
@@ -386,38 +388,38 @@ const GestionUsuarios = ({ usuario }) => {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Rol *</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">{t('users_role')} *</label>
                 <select
                   value={usuarioEditando.rol}
                   onChange={(e) => setUsuarioEditando({ ...usuarioEditando, rol: e.target.value })}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
                 >
-                  <option value="evaluado">Evaluado</option>
-                  <option value="coordinador">Coordinador</option>
-                  <option value="profesional">Profesional</option>
-                  <option value="administrador">Administrador</option>
+                  <option value="evaluado">{t('role_evaluated')}</option>
+                  <option value="coordinador">{t('role_coordinator')}</option>
+                  <option value="profesional">{t('role_professional')}</option>
+                  <option value="administrador">{t('role_admin')}</option>
                 </select>
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Área</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">{t('users_area')}</label>
                   <input
                     type="text"
                     value={usuarioEditando.area || ''}
                     onChange={(e) => setUsuarioEditando({ ...usuarioEditando, area: e.target.value })}
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-                    placeholder="Ej: Recursos Humanos"
+                    placeholder={t('users_placeholder_area')}
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Puesto</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">{t('users_position')}</label>
                   <input
                     type="text"
                     value={usuarioEditando.puesto || ''}
                     onChange={(e) => setUsuarioEditando({ ...usuarioEditando, puesto: e.target.value })}
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-                    placeholder="Ej: Analista"
+                    placeholder={t('users_placeholder_position')}
                   />
                 </div>
               </div>
@@ -431,7 +433,7 @@ const GestionUsuarios = ({ usuario }) => {
                     onChange={(e) => setUsuarioEditando({ ...usuarioEditando, activo: e.target.checked })}
                     className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
                   />
-                  <label htmlFor="activo" className="text-sm text-gray-700">Usuario activo</label>
+                  <label htmlFor="activo" className="text-sm text-gray-700">{t('users_active_label')}</label>
                 </div>
               )}
             </div>
@@ -441,7 +443,7 @@ const GestionUsuarios = ({ usuario }) => {
                 onClick={cerrarModal}
                 className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-100"
               >
-                Cancelar
+                {t('cancel')}
               </button>
               <button
                 onClick={guardarUsuario}
@@ -453,7 +455,7 @@ const GestionUsuarios = ({ usuario }) => {
                 ) : (
                   <Save className="w-4 h-4" />
                 )}
-                {guardando ? 'Guardando...' : 'Guardar'}
+                {guardando ? t('users_saving') : t('save')}
               </button>
             </div>
           </div>
