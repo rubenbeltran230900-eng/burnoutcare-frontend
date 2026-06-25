@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Building2, Plus, Edit, Trash2, Users, ChevronRight, ChevronLeft, ToggleLeft, ToggleRight, X, Check, UserPlus, Shield } from 'lucide-react';
 import { empresasService, usuariosService } from '../services/api';
 
+// Data identifiers kept as-is: sector/tamanio option values are used as API data keys
 const ROLES = ['administrador', 'profesional', 'coordinador', 'evaluado'];
 const SECTORES = ['Manufactura', 'Salud', 'Educación', 'Servicios', 'Construcción', 'Tecnología', 'Comercio', 'Otro'];
 const TAMANIOS = ['Micro (1-10)', 'Pequeña (11-50)', 'Mediana (51-250)', 'Grande (250+)'];
@@ -28,27 +30,28 @@ const Input = ({ label, value, onChange, placeholder, type = 'text', required })
   </div>
 );
 
-const Select = ({ label, value, onChange, options, required }) => (
+const Select = ({ label, value, onChange, options, required, placeholder }) => (
   <div>
     <label className="block text-sm font-medium text-gray-700 mb-1">
       {label} {required && <span className="text-red-500">*</span>}
     </label>
     <select value={value} onChange={e => onChange(e.target.value)}
       className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 bg-white">
-      <option value="">Selecciona...</option>
+      <option value="">{placeholder}</option>
       {options.map(o => <option key={o} value={o}>{o}</option>)}
     </select>
   </div>
 );
 
 const GestionEmpresas = () => {
+  const { t } = useTranslation();
   const [vista, setVista] = useState('empresas'); // 'empresas' | 'usuarios'
   const [empresas, setEmpresas] = useState([]);
   const [empresaSeleccionada, setEmpresaSeleccionada] = useState(null);
   const [usuarios, setUsuarios] = useState([]);
   const [cargando, setCargando] = useState(false);
   const [error, setError] = useState('');
-  const [modal, setModal] = useState(null); // null | 'crearEmpresa' | 'editarEmpresa' | 'crearUsuario' | 'editarUsuario' | 'confirmarEliminar'
+  const [modal, setModal] = useState(null); // null | 'empresa' | 'usuario' | 'confirmar'
   const [itemAEliminar, setItemAEliminar] = useState(null);
   const [guardando, setGuardando] = useState(false);
 
@@ -64,7 +67,7 @@ const GestionEmpresas = () => {
     try {
       const res = await empresasService.obtenerTodas();
       if (res.success) setEmpresas(res.data);
-    } catch { setError('Error al cargar empresas'); }
+    } catch { setError(t('msg_connection_error')); }
     finally { setCargando(false); }
   };
 
@@ -73,7 +76,7 @@ const GestionEmpresas = () => {
     try {
       const res = await empresasService.obtenerUsuarios(empresaId);
       if (res.success) setUsuarios(res.data);
-    } catch (err) { console.error('Error detallado:', err); setError('Error al cargar usuarios: ' + err.message); }
+    } catch (err) { console.error('Error detallado:', err); setError(t('msg_connection_error')); }
     finally { setCargando(false); }
   };
 
@@ -87,7 +90,7 @@ const GestionEmpresas = () => {
     if (res.success) setUsuarios(res.data);
   } catch (err) {
     console.error('Error en entrarEmpresa:', err);
-    setError('Error al cargar usuarios: ' + (err.message || err));
+    setError(t('msg_connection_error'));
   } finally {
     setCargando(false);
   }
@@ -124,7 +127,7 @@ const GestionEmpresas = () => {
       }
       setModal(null);
       cargarEmpresas();
-    } catch { setError('Error al guardar empresa'); }
+    } catch { setError(t('msg_connection_error')); }
     finally { setGuardando(false); }
   };
 
@@ -132,7 +135,7 @@ const GestionEmpresas = () => {
     try {
       await empresasService.toggleActivo(empresa.id);
       cargarEmpresas();
-    } catch { setError('Error al cambiar estado'); }
+    } catch { setError(t('msg_connection_error')); }
   };
 
   const confirmarEliminarEmpresa = (empresa) => {
@@ -167,7 +170,7 @@ const GestionEmpresas = () => {
       }
       setModal(null);
       await cargarUsuarios(empresaSeleccionada.id);
-    } catch { setError('Error al guardar usuario'); }
+    } catch { setError(t('msg_connection_error')); }
     finally { setGuardando(false); }
   };
 
@@ -175,7 +178,7 @@ const GestionEmpresas = () => {
     try {
       await usuariosService.actualizar(usuario.id, { activo: !usuario.activo });
       await cargarUsuarios(empresaSeleccionada.id);
-    } catch { setError('Error al cambiar estado'); }
+    } catch { setError(t('msg_connection_error')); }
   };
 
   const confirmarEliminarUsuario = (usuario) => {
@@ -197,7 +200,7 @@ const GestionEmpresas = () => {
        await cargarUsuarios(empresaSeleccionada.id);
       }
     } catch (err) {
-      setError(err.message || 'Error al eliminar');
+      setError(err.message || t('msg_connection_error'));
       setModal(null);
     }
     finally { setGuardando(false); }
@@ -219,13 +222,13 @@ const GestionEmpresas = () => {
       <div className="flex justify-between items-start mb-6">
         <div>
           <h1 className="text-2xl font-bold text-gray-800 flex items-center gap-2">
-            <Building2 className="w-7 h-7 text-blue-600" /> Gestión de Empresas
+            <Building2 className="w-7 h-7 text-blue-600" /> {t('company_title')}
           </h1>
-          <p className="text-gray-500 text-sm mt-1">Administra las organizaciones registradas en BurnoutCare</p>
+          <p className="text-gray-500 text-sm mt-1">{t('company_subtitle')}</p>
         </div>
         <button onClick={abrirCrearEmpresa}
           className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium">
-          <Plus className="w-4 h-4" /> Nueva Empresa
+          <Plus className="w-4 h-4" /> {t('company_new')}
         </button>
       </div>
 
@@ -235,26 +238,26 @@ const GestionEmpresas = () => {
       <div className="grid grid-cols-3 gap-4 mb-6">
         <div className="bg-white rounded-lg p-4 border border-gray-200 text-center">
           <p className="text-2xl font-bold text-blue-600">{empresas.length}</p>
-          <p className="text-sm text-gray-500">Total empresas</p>
+          <p className="text-sm text-gray-500">{t('company_total')}</p>
         </div>
         <div className="bg-white rounded-lg p-4 border border-gray-200 text-center">
           <p className="text-2xl font-bold text-green-600">{empresas.filter(e => e.activo).length}</p>
-          <p className="text-sm text-gray-500">Activas</p>
+          <p className="text-sm text-gray-500">{t('company_active')}</p>
         </div>
         <div className="bg-white rounded-lg p-4 border border-gray-200 text-center">
           <p className="text-2xl font-bold text-gray-400">{empresas.filter(e => !e.activo).length}</p>
-          <p className="text-sm text-gray-500">Inactivas</p>
+          <p className="text-sm text-gray-500">{t('company_inactive')}</p>
         </div>
       </div>
 
       {/* Lista */}
       {cargando ? (
-        <div className="text-center py-12 text-gray-400">Cargando empresas...</div>
+        <div className="text-center py-12 text-gray-400">{t('company_loading')}</div>
       ) : empresas.length === 0 ? (
         <div className="text-center py-12 text-gray-400">
           <Building2 className="w-12 h-12 mx-auto mb-3 opacity-30" />
-          <p>No hay empresas registradas</p>
-          <button onClick={abrirCrearEmpresa} className="mt-3 text-blue-600 hover:underline text-sm">Crear la primera empresa</button>
+          <p>{t('company_none')}</p>
+          <button onClick={abrirCrearEmpresa} className="mt-3 text-blue-600 hover:underline text-sm">{t('company_create_first')}</button>
         </div>
       ) : (
         <div className="grid gap-4">
@@ -265,7 +268,7 @@ const GestionEmpresas = () => {
                   <div className="flex items-center gap-3 mb-1">
                     <h3 className="text-lg font-bold text-gray-800">{empresa.nombre}</h3>
                     <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${empresa.activo ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-500'}`}>
-                      {empresa.activo ? 'Activa' : 'Inactiva'}
+                      {empresa.activo ? t('company_status_active') : t('company_status_inactive')}
                     </span>
                   </div>
                   <div className="flex flex-wrap gap-4 text-sm text-gray-500">
@@ -275,14 +278,14 @@ const GestionEmpresas = () => {
                     {empresa.contacto_email && <span>✉️ {empresa.contacto_email}</span>}
                   </div>
                   <div className="flex gap-4 mt-2 text-sm">
-                    <span className="text-blue-600 font-medium">{empresa.total_usuarios || 0} usuarios</span>
-                    <span className="text-green-600">{empresa.usuarios_activos || 0} activos</span>
+                    <span className="text-blue-600 font-medium">{t('company_users_count', { count: empresa.total_usuarios || 0 })}</span>
+                    <span className="text-green-600">{t('company_users_active_count', { count: empresa.usuarios_activos || 0 })}</span>
                   </div>
                 </div>
                 <div className="flex items-center gap-2 ml-4">
                   <button onClick={() => entrarEmpresa(empresa)}
                     className="flex items-center gap-1 px-3 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm font-medium">
-                    <Users className="w-4 h-4" /> Usuarios <ChevronRight className="w-4 h-4" />
+                    <Users className="w-4 h-4" /> {t('company_users_btn')} <ChevronRight className="w-4 h-4" />
                   </button>
                   <button onClick={() => abrirEditarEmpresa(empresa)}
                     className="p-2 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors">
@@ -305,19 +308,19 @@ const GestionEmpresas = () => {
 
       {/* Modal empresa */}
       {modal === 'empresa' && (
-        <Modal titulo={empresaEditando ? 'Editar Empresa' : 'Nueva Empresa'} onClose={() => setModal(null)}>
+        <Modal titulo={empresaEditando ? t('company_modal_edit') : t('company_modal_new')} onClose={() => setModal(null)}>
           <div className="space-y-4">
-            <Input label="Nombre de la empresa" value={formEmpresa.nombre} onChange={v => setFormEmpresa({...formEmpresa, nombre: v})} placeholder="Ej: Consagui S.A. de C.V." required />
-            <Select label="Sector" value={formEmpresa.sector} onChange={v => setFormEmpresa({...formEmpresa, sector: v})} options={SECTORES} />
-            <Select label="Tamaño" value={formEmpresa.tamanio} onChange={v => setFormEmpresa({...formEmpresa, tamanio: v})} options={TAMANIOS} />
-            <Input label="Nombre del contacto" value={formEmpresa.contacto_nombre} onChange={v => setFormEmpresa({...formEmpresa, contacto_nombre: v})} placeholder="Ej: Lic. Ana García" />
-            <Input label="Email del contacto" value={formEmpresa.contacto_email} onChange={v => setFormEmpresa({...formEmpresa, contacto_email: v})} placeholder="contacto@empresa.com" type="email" />
+            <Input label={t('company_name')} value={formEmpresa.nombre} onChange={v => setFormEmpresa({...formEmpresa, nombre: v})} placeholder="Ej: Consagui S.A. de C.V." required />
+            <Select label={t('company_sector')} value={formEmpresa.sector} onChange={v => setFormEmpresa({...formEmpresa, sector: v})} options={SECTORES} placeholder={t('company_select')} />
+            <Select label={t('company_size')} value={formEmpresa.tamanio} onChange={v => setFormEmpresa({...formEmpresa, tamanio: v})} options={TAMANIOS} placeholder={t('company_select')} />
+            <Input label={t('company_contact_name')} value={formEmpresa.contacto_nombre} onChange={v => setFormEmpresa({...formEmpresa, contacto_nombre: v})} placeholder="Ej: Lic. Ana García" />
+            <Input label={t('company_contact_email')} value={formEmpresa.contacto_email} onChange={v => setFormEmpresa({...formEmpresa, contacto_email: v})} placeholder="contacto@empresa.com" type="email" />
           </div>
           <div className="flex gap-3 mt-6">
-            <button onClick={() => setModal(null)} className="flex-1 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50">Cancelar</button>
+            <button onClick={() => setModal(null)} className="flex-1 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50">{t('cancel')}</button>
             <button onClick={guardarEmpresa} disabled={!formEmpresa.nombre || guardando}
               className="flex-1 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 font-medium flex items-center justify-center gap-2">
-              <Check className="w-4 h-4" /> {guardando ? 'Guardando...' : 'Guardar'}
+              <Check className="w-4 h-4" /> {guardando ? t('company_saving') : t('save')}
             </button>
           </div>
         </Modal>
@@ -325,13 +328,13 @@ const GestionEmpresas = () => {
 
       {/* Modal confirmar eliminar */}
       {modal === 'confirmar' && itemAEliminar && (
-        <Modal titulo="Confirmar eliminación" onClose={() => setModal(null)}>
-          <p className="text-gray-600 mb-6">¿Estás seguro de que deseas eliminar <strong>{itemAEliminar.item.nombre}</strong>? Esta acción no se puede deshacer.</p>
+        <Modal titulo={t('company_confirm_delete')} onClose={() => setModal(null)}>
+          <p className="text-gray-600 mb-6">{t('company_confirm_delete_msg', { name: itemAEliminar.item.nombre })}</p>
           <div className="flex gap-3">
-            <button onClick={() => setModal(null)} className="flex-1 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50">Cancelar</button>
+            <button onClick={() => setModal(null)} className="flex-1 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50">{t('cancel')}</button>
             <button onClick={ejecutarEliminar} disabled={guardando}
               className="flex-1 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 disabled:opacity-50 font-medium flex items-center justify-center gap-2">
-              <Trash2 className="w-4 h-4" /> {guardando ? 'Eliminando...' : 'Eliminar'}
+              <Trash2 className="w-4 h-4" /> {guardando ? t('company_deleting') : t('delete')}
             </button>
           </div>
         </Modal>
@@ -348,16 +351,16 @@ const GestionEmpresas = () => {
       <div className="flex justify-between items-start mb-6">
         <div>
           <button onClick={volverEmpresas} className="flex items-center gap-1 text-blue-600 hover:underline text-sm mb-2">
-            <ChevronLeft className="w-4 h-4" /> Volver a empresas
+            <ChevronLeft className="w-4 h-4" /> {t('company_back')}
           </button>
           <h1 className="text-2xl font-bold text-gray-800 flex items-center gap-2">
             <Users className="w-7 h-7 text-blue-600" /> {empresaSeleccionada?.nombre}
           </h1>
-          <p className="text-gray-500 text-sm mt-1">Usuarios registrados en esta empresa</p>
+          <p className="text-gray-500 text-sm mt-1">{t('company_users_registered')}</p>
         </div>
         <button onClick={abrirCrearUsuario}
           className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium">
-          <UserPlus className="w-4 h-4" /> Nuevo Usuario
+          <UserPlus className="w-4 h-4" /> {t('users_new')}
         </button>
       </div>
 
@@ -368,6 +371,7 @@ const GestionEmpresas = () => {
         {ROLES.map(rol => (
           <div key={rol} className="bg-white rounded-lg p-3 border border-gray-200 text-center">
             <p className="text-xl font-bold text-gray-700">{usuarios.filter(u => u.rol === rol).length}</p>
+            {/* rol values are data identifiers kept as-is */}
             <p className={`text-xs font-medium px-2 py-0.5 rounded-full mt-1 inline-block ${rolColor[rol]}`}>{rol}</p>
           </div>
         ))}
@@ -375,23 +379,23 @@ const GestionEmpresas = () => {
 
       {/* Lista de usuarios */}
       {cargando ? (
-        <div className="text-center py-12 text-gray-400">Cargando usuarios...</div>
+        <div className="text-center py-12 text-gray-400">{t('company_loading_users')}</div>
       ) : usuarios.length === 0 ? (
         <div className="text-center py-12 text-gray-400">
           <Users className="w-12 h-12 mx-auto mb-3 opacity-30" />
-          <p>No hay usuarios en esta empresa</p>
-          <button onClick={abrirCrearUsuario} className="mt-3 text-blue-600 hover:underline text-sm">Crear el primer usuario</button>
+          <p>{t('company_no_users')}</p>
+          <button onClick={abrirCrearUsuario} className="mt-3 text-blue-600 hover:underline text-sm">{t('company_create_first_user')}</button>
         </div>
       ) : (
         <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
           <table className="w-full">
             <thead className="bg-gray-50 border-b border-gray-200">
               <tr>
-                <th className="text-left px-4 py-3 text-xs font-medium text-gray-500 uppercase">Usuario</th>
-                <th className="text-left px-4 py-3 text-xs font-medium text-gray-500 uppercase">Rol</th>
-                <th className="text-left px-4 py-3 text-xs font-medium text-gray-500 uppercase">Área / Puesto</th>
-                <th className="text-left px-4 py-3 text-xs font-medium text-gray-500 uppercase">Estado</th>
-                <th className="text-right px-4 py-3 text-xs font-medium text-gray-500 uppercase">Acciones</th>
+                <th className="text-left px-4 py-3 text-xs font-medium text-gray-500 uppercase">{t('company_col_user')}</th>
+                <th className="text-left px-4 py-3 text-xs font-medium text-gray-500 uppercase">{t('company_col_role')}</th>
+                <th className="text-left px-4 py-3 text-xs font-medium text-gray-500 uppercase">{t('company_col_area')}</th>
+                <th className="text-left px-4 py-3 text-xs font-medium text-gray-500 uppercase">{t('company_col_status')}</th>
+                <th className="text-right px-4 py-3 text-xs font-medium text-gray-500 uppercase">{t('company_col_actions')}</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100">
@@ -402,6 +406,7 @@ const GestionEmpresas = () => {
                     <p className="text-xs text-gray-500">{usuario.email}</p>
                   </td>
                   <td className="px-4 py-3">
+                    {/* rol value is a data identifier kept as-is */}
                     <span className={`px-2 py-1 rounded-full text-xs font-medium ${rolColor[usuario.rol] || 'bg-gray-100 text-gray-600'}`}>
                       {usuario.rol}
                     </span>
@@ -412,7 +417,7 @@ const GestionEmpresas = () => {
                   </td>
                   <td className="px-4 py-3">
                     <span className={`px-2 py-1 rounded-full text-xs font-medium ${usuario.activo ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-500'}`}>
-                      {usuario.activo ? 'Activo' : 'Inactivo'}
+                      {usuario.activo ? t('company_status_active') : t('company_status_inactive')}
                     </span>
                   </td>
                   <td className="px-4 py-3">
@@ -440,21 +445,21 @@ const GestionEmpresas = () => {
 
       {/* Modal usuario */}
       {modal === 'usuario' && (
-        <Modal titulo={usuarioEditando ? 'Editar Usuario' : 'Nuevo Usuario'} onClose={() => setModal(null)}>
+        <Modal titulo={usuarioEditando ? t('company_modal_edit_user') : t('company_modal_new_user')} onClose={() => setModal(null)}>
           <div className="space-y-4">
-            <Input label="Nombre completo" value={formUsuario.nombre} onChange={v => setFormUsuario({...formUsuario, nombre: v})} placeholder="Nombre del usuario" required />
-            <Input label="Email" value={formUsuario.email} onChange={v => setFormUsuario({...formUsuario, email: v})} placeholder="correo@empresa.com" type="email" required />
-            <Input label={usuarioEditando ? 'Nueva contraseña (dejar vacío para no cambiar)' : 'Contraseña'} value={formUsuario.password} onChange={v => setFormUsuario({...formUsuario, password: v})} placeholder="••••••••" type="password" required={!usuarioEditando} />
-            <Select label="Rol" value={formUsuario.rol} onChange={v => setFormUsuario({...formUsuario, rol: v})} options={ROLES} required />
-            <Input label="Área / Departamento" value={formUsuario.area} onChange={v => setFormUsuario({...formUsuario, area: v})} placeholder="Ej: Recursos Humanos" />
-            <Input label="Puesto" value={formUsuario.puesto} onChange={v => setFormUsuario({...formUsuario, puesto: v})} placeholder="Ej: Coordinador" />
+            <Input label={t('users_name')} value={formUsuario.nombre} onChange={v => setFormUsuario({...formUsuario, nombre: v})} placeholder={t('users_full_name_placeholder')} required />
+            <Input label={t('users_email')} value={formUsuario.email} onChange={v => setFormUsuario({...formUsuario, email: v})} placeholder="correo@empresa.com" type="email" required />
+            <Input label={usuarioEditando ? t('company_user_new_password') : t('users_password')} value={formUsuario.password} onChange={v => setFormUsuario({...formUsuario, password: v})} placeholder="••••••••" type="password" required={!usuarioEditando} />
+            <Select label={t('users_role')} value={formUsuario.rol} onChange={v => setFormUsuario({...formUsuario, rol: v})} options={ROLES} placeholder={t('company_select')} required />
+            <Input label={t('company_user_area')} value={formUsuario.area} onChange={v => setFormUsuario({...formUsuario, area: v})} placeholder={t('users_placeholder_area')} />
+            <Input label={t('company_user_position')} value={formUsuario.puesto} onChange={v => setFormUsuario({...formUsuario, puesto: v})} placeholder={t('users_placeholder_position')} />
           </div>
           <div className="flex gap-3 mt-6">
-            <button onClick={() => setModal(null)} className="flex-1 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50">Cancelar</button>
+            <button onClick={() => setModal(null)} className="flex-1 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50">{t('cancel')}</button>
             <button onClick={guardarUsuario}
               disabled={!formUsuario.nombre || !formUsuario.email || (!usuarioEditando && !formUsuario.password) || guardando}
               className="flex-1 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 font-medium flex items-center justify-center gap-2">
-              <Check className="w-4 h-4" /> {guardando ? 'Guardando...' : 'Guardar'}
+              <Check className="w-4 h-4" /> {guardando ? t('company_saving') : t('save')}
             </button>
           </div>
         </Modal>
@@ -462,13 +467,13 @@ const GestionEmpresas = () => {
 
       {/* Modal confirmar eliminar */}
       {modal === 'confirmar' && itemAEliminar && (
-        <Modal titulo="Confirmar eliminación" onClose={() => setModal(null)}>
-          <p className="text-gray-600 mb-6">¿Estás seguro de que deseas eliminar <strong>{itemAEliminar.item.nombre}</strong>? Esta acción no se puede deshacer.</p>
+        <Modal titulo={t('company_confirm_delete')} onClose={() => setModal(null)}>
+          <p className="text-gray-600 mb-6">{t('company_confirm_delete_msg', { name: itemAEliminar.item.nombre })}</p>
           <div className="flex gap-3">
-            <button onClick={() => setModal(null)} className="flex-1 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50">Cancelar</button>
+            <button onClick={() => setModal(null)} className="flex-1 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50">{t('cancel')}</button>
             <button onClick={ejecutarEliminar} disabled={guardando}
               className="flex-1 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 disabled:opacity-50 font-medium flex items-center justify-center gap-2">
-              <Trash2 className="w-4 h-4" /> {guardando ? 'Eliminando...' : 'Eliminar'}
+              <Trash2 className="w-4 h-4" /> {guardando ? t('company_deleting') : t('delete')}
             </button>
           </div>
         </Modal>
