@@ -3,51 +3,58 @@ import { useTranslation } from 'react-i18next';
 import { ClipboardList, ChevronRight, ChevronLeft, CheckCircle, AlertTriangle, User, Briefcase, Building } from 'lucide-react';
 import { evaluacionesService } from '../services/api';
 
-const preguntasCBI = [
-  { id: 1, dimension: 'BP', texto: '¿Con qué frecuencia te sientes cansado/a?' },
-  { id: 2, dimension: 'BP', texto: '¿Con qué frecuencia estás físicamente agotado/a?' },
-  { id: 3, dimension: 'BP', texto: '¿Con qué frecuencia estás emocionalmente agotado/a?' },
-  { id: 4, dimension: 'BP', texto: '¿Con qué frecuencia piensas "No puedo más"?' },
-  { id: 5, dimension: 'BP', texto: '¿Con qué frecuencia te sientes agotado/a?' },
-  { id: 6, dimension: 'BP', texto: '¿Con qué frecuencia te sientes débil y susceptible a enfermarte?' },
-  { id: 7, dimension: 'BL', texto: '¿Tu trabajo es emocionalmente agotador?' },
-  { id: 8, dimension: 'BL', texto: '¿Te sientes agotado/a por tu trabajo?' },
-  { id: 9, dimension: 'BL', texto: '¿Tu trabajo te frustra?' },
-  { id: 10, dimension: 'BL', texto: '¿Te sientes agotado/a al final de la jornada laboral?' },
-  { id: 11, dimension: 'BL', texto: '¿Te sientes exhausto/a en la mañana al pensar en otro día de trabajo?' },
-  { id: 12, dimension: 'BL', texto: '¿Sientes que cada hora de trabajo es cansadora para ti?' },
-  { id: 13, dimension: 'BL', texto: '¿Tienes suficiente energía para la familia y amigos durante el tiempo libre?' },
-  { id: 14, dimension: 'BC', texto: '¿Te resulta difícil trabajar con clientes/usuarios?' },
-  { id: 15, dimension: 'BC', texto: '¿Te agota trabajar con clientes/usuarios?' },
-  { id: 16, dimension: 'BC', texto: '¿Te frustra trabajar con clientes/usuarios?' },
-  { id: 17, dimension: 'BC', texto: '¿Sientes que das más de lo que recibes al trabajar con clientes/usuarios?' },
-  { id: 18, dimension: 'BC', texto: '¿Estás cansado/a de trabajar con clientes/usuarios?' },
-  { id: 19, dimension: 'BC', texto: '¿Te preguntas cuánto tiempo más podrás seguir trabajando con clientes/usuarios?' }
-];
-
-const opcionesRespuesta = [
-  { valor: 0,   texto: 'Nunca / Casi nunca', color: 'bg-green-100 border-green-300 text-green-800' },
-  { valor: 25,  texto: 'Rara vez',           color: 'bg-lime-100 border-lime-300 text-lime-800' },
-  { valor: 50,  texto: 'A veces',            color: 'bg-yellow-100 border-yellow-300 text-yellow-800' },
-  { valor: 75,  texto: 'Frecuentemente',     color: 'bg-orange-100 border-orange-300 text-orange-800' },
-  { valor: 100, texto: 'Siempre',            color: 'bg-red-100 border-red-300 text-red-800' }
-];
-
-const opcionesEdad        = ['18-25', '26-35', '36-45', '46-55', '56+'];
-const opcionesGenero      = ['Masculino', 'Femenino', 'No binario', 'Prefiero no decir'];
-const opcionesEducacion   = ['Preparatoria / Bachillerato', 'Técnico', 'Licenciatura', 'Maestría', 'Doctorado'];
-const opcionesSector      = ['Sector privado', 'Sector público', 'ONG / Sin fines de lucro'];
-const opcionesIndustria   = ['Manufactura', 'Salud', 'Educación', 'Construcción / Ingeniería', 'Servicios', 'Otro'];
-const opcionesPuesto      = ['Operativo / Entrada', 'Especialista / Staff', 'Mandos medios', 'Dirección / Liderazgo'];
-const opcionesExperiencia = ['Menos de 1 año', '1-3 años', '4-7 años', '8+ años'];
-const opcionesHoras       = ['Menos de 40h', '40-48h', 'Más de 48h'];
-const opcionesModalidad   = ['Presencial', 'Remoto / Teletrabajo', 'Híbrido'];
-
 const CONSENTIMIENTO_VERSION = '1.0-2026-06';
 
 const ModuloEvaluacionMBI = ({ usuario, onCambiarModulo }) => {
-const { t } = useTranslation();
-const [paso, setPaso] = useState('inicio');
+  const { t } = useTranslation();
+
+  const preguntasCBI = [
+    { id: 1,  dimension: 'BP', texto: t('cbi_q1') },
+    { id: 2,  dimension: 'BP', texto: t('cbi_q2') },
+    { id: 3,  dimension: 'BP', texto: t('cbi_q3') },
+    { id: 4,  dimension: 'BP', texto: t('cbi_q4') },
+    { id: 5,  dimension: 'BP', texto: t('cbi_q5') },
+    { id: 6,  dimension: 'BP', texto: t('cbi_q6') },
+    { id: 7,  dimension: 'BL', texto: t('cbi_q7') },
+    { id: 8,  dimension: 'BL', texto: t('cbi_q8') },
+    { id: 9,  dimension: 'BL', texto: t('cbi_q9') },
+    { id: 10, dimension: 'BL', texto: t('cbi_q10') },
+    { id: 11, dimension: 'BL', texto: t('cbi_q11') },
+    { id: 12, dimension: 'BL', texto: t('cbi_q12') },
+    { id: 13, dimension: 'BL', texto: t('cbi_q13') },
+    { id: 14, dimension: 'BC', texto: t('cbi_q14') },
+    { id: 15, dimension: 'BC', texto: t('cbi_q15') },
+    { id: 16, dimension: 'BC', texto: t('cbi_q16') },
+    { id: 17, dimension: 'BC', texto: t('cbi_q17') },
+    { id: 18, dimension: 'BC', texto: t('cbi_q18') },
+    { id: 19, dimension: 'BC', texto: t('cbi_q19') },
+  ];
+
+  const opcionesRespuesta = [
+    { valor: 0,   texto: t('answer_never'),     color: 'bg-green-100 border-green-300 text-green-800' },
+    { valor: 25,  texto: t('answer_rarely'),    color: 'bg-lime-100 border-lime-300 text-lime-800' },
+    { valor: 50,  texto: t('answer_sometimes'), color: 'bg-yellow-100 border-yellow-300 text-yellow-800' },
+    { valor: 75,  texto: t('answer_often'),     color: 'bg-orange-100 border-orange-300 text-orange-800' },
+    { valor: 100, texto: t('answer_always'),    color: 'bg-red-100 border-red-300 text-red-800' },
+  ];
+
+  const opcionesEdad        = [t('age_18'), t('age_26'), t('age_36'), t('age_46'), t('age_56')];
+  const opcionesGenero      = [t('gender_male'), t('gender_female'), t('gender_nb'), t('gender_na')];
+  const opcionesEducacion   = [t('edu_hs'), t('edu_tech'), t('edu_bach'), t('edu_master'), t('edu_phd')];
+  const opcionesSector      = [t('sector_private'), t('sector_public'), t('sector_ngo')];
+  const opcionesIndustria   = [t('industry_mfg'), t('industry_health'), t('industry_edu'), t('industry_eng'), t('industry_svc'), t('industry_other')];
+  const opcionesPuesto      = [t('level_entry'), t('level_staff'), t('level_mid'), t('level_exec')];
+  const opcionesExperiencia = [t('exp_less1'), t('exp_1_3'), t('exp_4_7'), t('exp_8plus')];
+  const opcionesHoras       = [t('hours_less40'), t('hours_40_48'), t('hours_more48')];
+  const opcionesModalidad   = [t('mode_onsite'), t('mode_remote'), t('mode_hybrid')];
+
+  const riskLabel = {
+    'Bajo':  t('risk_low'),
+    'Medio': t('risk_medium'),
+    'Alto':  t('risk_high'),
+  };
+
+  const [paso, setPaso] = useState('inicio');
   const [consentimientoAceptado, setConsentimientoAceptado] = useState(false);
   const [consentimientoFecha, setConsentimientoFecha] = useState(null);
   const [datosColaborador, setDatosColaborador] = useState({ nombre: '', area: '', puesto: '' });
@@ -118,7 +125,7 @@ const [paso, setPaso] = useState('inicio');
         respuestas: {
           demograficos: {
             ...demograficos,
-            industria: demograficos.industria === 'Otro' ? demograficos.industria_otro : demograficos.industria
+            industria: demograficos.industria === t('industry_other') ? demograficos.industria_otro : demograficos.industria
           },
           cbi: respuestas,
           cualitativos
@@ -133,7 +140,7 @@ const [paso, setPaso] = useState('inicio');
         setEvaluacionExistente(err.data);
         setPaso('ya-completado');
       } else {
-        setError('Error al guardar la evaluación. Intenta de nuevo.');
+        setError(t('eval_save_error'));
       }
       console.error(err);
     } finally {
@@ -163,7 +170,7 @@ const [paso, setPaso] = useState('inicio');
         onChange={e => onChange(e.target.value)}
         className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 bg-white"
       >
-        <option value="">Selecciona una opción...</option>
+        <option value="">{t('demo_select')}</option>
         {options.map(o => <option key={o} value={o}>{o}</option>)}
       </select>
     </div>
@@ -177,26 +184,25 @@ const [paso, setPaso] = useState('inicio');
           <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-100 rounded-full mb-4">
             <ClipboardList className="w-8 h-8 text-blue-600" />
           </div>
-          <h1 className="text-2xl font-bold text-gray-800 mb-2">Evaluación de Burnout</h1>
-          <p className="text-gray-600">Copenhagen Burnout Inventory (CBI)</p>
+          <h1 className="text-2xl font-bold text-gray-800 mb-2">{t('eval_title')}</h1>
+          <p className="text-gray-600">{t('eval_subtitle')}</p>
         </div>
         <div className="bg-blue-50 rounded-lg p-6 mb-6">
-          <h2 className="font-semibold text-blue-800 mb-3">Acerca del CBI</h2>
+          <h2 className="font-semibold text-blue-800 mb-3">{t('eval_about')}</h2>
           <p className="text-blue-700 text-sm mb-4">
-            El Copenhagen Burnout Inventory es un instrumento validado científicamente que evalúa
-            tres dimensiones del burnout: personal, laboral y relacionado con clientes/usuarios.
+            {t('eval_about_text')}
           </p>
           <ul className="text-sm text-blue-700 space-y-1">
-            <li>• Perfil demográfico y ocupacional</li>
-            <li>• 19 preguntas del CBI</li>
-            <li>• 3 preguntas de contexto cualitativo</li>
-            <li>• Tiempo estimado: 10-15 minutos</li>
-            <li>• Completamente confidencial</li>
+            <li>{t('eval_items')}</li>
+            <li>{t('eval_items_cbi')}</li>
+            <li>{t('eval_items_qual')}</li>
+            <li>{t('eval_time')}</li>
+            <li>{t('eval_confidential')}</li>
           </ul>
         </div>
         <button onClick={() => setPaso('consentimiento')}
           className="w-full py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium flex items-center justify-center gap-2">
-          Comenzar Evaluación <ChevronRight className="w-5 h-5" />
+          {t('eval_start')} <ChevronRight className="w-5 h-5" />
         </button>
       </div>
     </div>
@@ -207,8 +213,8 @@ const [paso, setPaso] = useState('inicio');
     <div className="max-w-2xl mx-auto">
       <div className="bg-white rounded-xl shadow-lg p-8">
         <div className="text-center mb-6">
-          <h2 className="text-xl font-bold text-gray-800">Consentimiento Informado</h2>
-          <p className="text-gray-500 text-sm mt-1">Por favor lee y acepta antes de continuar</p>
+          <h2 className="text-xl font-bold text-gray-800">{t('consent_title')}</h2>
+          <p className="text-gray-500 text-sm mt-1">{t('consent_step')}</p>
         </div>
 
         <div className="bg-gray-50 border border-gray-200 rounded-lg p-5 mb-6 h-80 overflow-y-auto text-sm text-gray-700 space-y-4 leading-relaxed">
@@ -265,14 +271,14 @@ const [paso, setPaso] = useState('inicio');
             }}
           />
           <span className="text-sm text-gray-700">
-            He leído y comprendo la información de este estudio. Acepto participar de forma voluntaria y doy mi consentimiento para que mis respuestas sean utilizadas con fines de investigación según lo descrito anteriormente.
+            {t('consent_accept')}
           </span>
         </label>
 
         <div className="flex gap-3">
           <button onClick={() => setPaso('inicio')}
             className="flex-1 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors font-medium flex items-center justify-center gap-2">
-            <ChevronLeft className="w-5 h-5" /> Volver
+            <ChevronLeft className="w-5 h-5" /> {t('back')}
           </button>
           <button
             onClick={() => consentimientoAceptado && setPaso('datos')}
@@ -281,7 +287,7 @@ const [paso, setPaso] = useState('inicio');
               ${consentimientoAceptado
                 ? 'bg-blue-600 text-white hover:bg-blue-700 cursor-pointer'
                 : 'bg-gray-200 text-gray-400 cursor-not-allowed'}`}>
-            Acepto y continúo <ChevronRight className="w-5 h-5" />
+            {t('consent_continue')} <ChevronRight className="w-5 h-5" />
           </button>
         </div>
       </div>
@@ -305,10 +311,9 @@ const [paso, setPaso] = useState('inicio');
           <div className="inline-flex items-center justify-center w-16 h-16 bg-yellow-100 rounded-full mb-4">
             <CheckCircle className="w-8 h-8 text-yellow-500" />
           </div>
-          <h2 className="text-xl font-bold text-gray-800 mb-2">Ya completaste tu evaluación</h2>
+          <h2 className="text-xl font-bold text-gray-800 mb-2">{t('eval_already_done_title')}</h2>
           <p className="text-gray-600 mb-6">
-            Registramos tu evaluación el <span className="font-semibold">{fechaFormateada}</span>.
-            Para mantener la integridad del estudio, solo se permite una evaluación cada 30 días.
+            {t('eval_already_done_desc')} <span className="font-semibold">{fechaFormateada}</span>.
           </p>
 
           <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6 text-sm text-blue-700">
@@ -329,7 +334,7 @@ const [paso, setPaso] = useState('inicio');
               onClick={reiniciarEvaluacion}
               className="w-full py-3 border border-gray-300 text-gray-600 rounded-lg hover:bg-gray-50 font-medium"
             >
-              Volver al inicio
+              {t('back')}
             </button>
           </div>
         </div>
@@ -341,45 +346,45 @@ const [paso, setPaso] = useState('inicio');
   if (paso === 'datos') return (
     <div className="max-w-2xl mx-auto">
       <div className="bg-white rounded-xl shadow-lg p-8">
-        <h2 className="text-xl font-bold text-gray-800 mb-2">Datos del Colaborador</h2>
-        <p className="text-gray-500 text-sm mb-6">Paso 1 de 4</p>
+        <h2 className="text-xl font-bold text-gray-800 mb-2">{t('collaborator_title')}</h2>
+        <p className="text-gray-500 text-sm mb-6">{t('collaborator_step')}</p>
         <div className="space-y-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              <User className="w-4 h-4 inline mr-1" /> Nombre completo
+              <User className="w-4 h-4 inline mr-1" /> {t('collaborator_name')}
             </label>
             <input type="text" value={datosColaborador.nombre}
               onChange={e => setDatosColaborador({ ...datosColaborador, nombre: e.target.value })}
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-              placeholder="Ingresa tu nombre" />
+              placeholder={t('collaborator_name_placeholder')} />
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              <Building className="w-4 h-4 inline mr-1" /> Área / Departamento
+              <Building className="w-4 h-4 inline mr-1" /> {t('collaborator_area')}
             </label>
             <input type="text" value={datosColaborador.area}
               onChange={e => setDatosColaborador({ ...datosColaborador, area: e.target.value })}
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-              placeholder="Ej: Recursos Humanos, Ventas..." />
+              placeholder={t('collaborator_area_placeholder')} />
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              <Briefcase className="w-4 h-4 inline mr-1" /> Puesto
+              <Briefcase className="w-4 h-4 inline mr-1" /> {t('collaborator_position')}
             </label>
             <input type="text" value={datosColaborador.puesto}
               onChange={e => setDatosColaborador({ ...datosColaborador, puesto: e.target.value })}
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-              placeholder="Ej: Analista, Coordinador..." />
+              placeholder={t('collaborator_position_placeholder')} />
           </div>
         </div>
         <div className="flex gap-4 mt-8">
           <button onClick={() => setPaso('inicio')}
             className="flex-1 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors font-medium flex items-center justify-center gap-2">
-            <ChevronLeft className="w-5 h-5" /> Volver
+            <ChevronLeft className="w-5 h-5" /> {t('back')}
           </button>
           <button onClick={() => setPaso('demograficos')} disabled={!datosColaborador.nombre}
             className="flex-1 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed">
-            Continuar <ChevronRight className="w-5 h-5" />
+            {t('collaborator_continue')} <ChevronRight className="w-5 h-5" />
           </button>
         </div>
       </div>
@@ -390,48 +395,48 @@ const [paso, setPaso] = useState('inicio');
   if (paso === 'demograficos') return (
     <div className="max-w-2xl mx-auto">
       <div className="bg-white rounded-xl shadow-lg p-8">
-        <h2 className="text-xl font-bold text-gray-800 mb-1">Sección 1: Perfil Demográfico y Ocupacional</h2>
-        <p className="text-gray-500 text-sm mb-2">Paso 2 de 4</p>
+        <h2 className="text-xl font-bold text-gray-800 mb-1">{t('demo_title')}</h2>
+        <p className="text-gray-500 text-sm mb-2">{t('demo_step')}</p>
         <p className="text-gray-500 text-sm mb-6">
-          Esta información es anónima y se usa para identificar patrones organizacionales.
+          {t('demo_instructions')}
         </p>
         <div className="space-y-4">
-          <SelectField label="1. Rango de edad" value={demograficos.edad}
+          <SelectField label={t('demo_age')} value={demograficos.edad}
             onChange={v => setDemograficos({ ...demograficos, edad: v })} options={opcionesEdad} />
-          <SelectField label="2. Género" value={demograficos.genero}
+          <SelectField label={t('demo_gender')} value={demograficos.genero}
             onChange={v => setDemograficos({ ...demograficos, genero: v })} options={opcionesGenero} />
-          <SelectField label="3. Nivel educativo más alto" value={demograficos.educacion}
+          <SelectField label={t('demo_education')} value={demograficos.educacion}
             onChange={v => setDemograficos({ ...demograficos, educacion: v })} options={opcionesEducacion} />
-          <SelectField label="4. Sector de trabajo" value={demograficos.sector}
+          <SelectField label={t('demo_sector')} value={demograficos.sector}
             onChange={v => setDemograficos({ ...demograficos, sector: v })} options={opcionesSector} />
-          <SelectField label="5. Industria / Campo" value={demograficos.industria}
+          <SelectField label={t('demo_industry')} value={demograficos.industria}
             onChange={v => setDemograficos({ ...demograficos, industria: v })} options={opcionesIndustria} />
-          {demograficos.industria === 'Otro' && (
+          {demograficos.industria === t('industry_other') && (
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Especifica tu industria</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">{t('demo_industry_other')}</label>
               <input type="text" value={demograficos.industria_otro}
                 onChange={e => setDemograficos({ ...demograficos, industria_otro: e.target.value })}
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-                placeholder="Escribe tu industria..." />
+                placeholder={t('demo_industry_other')} />
             </div>
           )}
-          <SelectField label="6. Nivel de puesto" value={demograficos.nivel_puesto}
+          <SelectField label={t('demo_job_level')} value={demograficos.nivel_puesto}
             onChange={v => setDemograficos({ ...demograficos, nivel_puesto: v })} options={opcionesPuesto} />
-          <SelectField label="7. Años de experiencia en posición actual" value={demograficos.experiencia}
+          <SelectField label={t('demo_experience')} value={demograficos.experiencia}
             onChange={v => setDemograficos({ ...demograficos, experiencia: v })} options={opcionesExperiencia} />
-          <SelectField label="8. Horas de trabajo promedio por semana" value={demograficos.horas_semanales}
+          <SelectField label={t('demo_hours')} value={demograficos.horas_semanales}
             onChange={v => setDemograficos({ ...demograficos, horas_semanales: v })} options={opcionesHoras} />
-          <SelectField label="9. Modalidad de trabajo" value={demograficos.modalidad}
+          <SelectField label={t('demo_work_mode')} value={demograficos.modalidad}
             onChange={v => setDemograficos({ ...demograficos, modalidad: v })} options={opcionesModalidad} />
         </div>
         <div className="flex gap-4 mt-8">
           <button onClick={() => setPaso('datos')}
             className="flex-1 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors font-medium flex items-center justify-center gap-2">
-            <ChevronLeft className="w-5 h-5" /> Volver
+            <ChevronLeft className="w-5 h-5" /> {t('back')}
           </button>
           <button onClick={() => setPaso('evaluacion')} disabled={!demograficosCompletos()}
             className="flex-1 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed">
-            Continuar al CBI <ChevronRight className="w-5 h-5" />
+            {t('next')} <ChevronRight className="w-5 h-5" />
           </button>
         </div>
       </div>
@@ -442,15 +447,19 @@ const [paso, setPaso] = useState('inicio');
   if (paso === 'evaluacion') {
     const pregunta = preguntasCBI[preguntaActual];
     const progreso = ((preguntaActual + 1) / preguntasCBI.length) * 100;
-    const dimensionTexto = { BP: 'Burnout Personal', BL: 'Burnout Laboral', BC: 'Burnout por Cliente' };
+    const dimensionTexto = {
+      BP: t('dim_personal'),
+      BL: t('dim_work'),
+      BC: t('dim_client'),
+    };
     return (
       <div className="max-w-2xl mx-auto">
         <div className="bg-white rounded-xl shadow-lg p-8">
-          <p className="text-gray-500 text-sm mb-4">Sección 2: CBI — Paso 3 de 4</p>
+          <p className="text-gray-500 text-sm mb-4">{t('eval_subtitle')} — {t('demo_step').replace('2', '3')}</p>
           <div className="mb-6">
             <div className="flex justify-between text-sm text-gray-600 mb-2">
-              <span>Pregunta {preguntaActual + 1} de {preguntasCBI.length}</span>
-              <span>{Math.round(progreso)}% completado</span>
+              <span>{t('eval_question')} {preguntaActual + 1} {t('eval_of')} {preguntasCBI.length}</span>
+              <span>{Math.round(progreso)}% {t('eval_completed')}</span>
             </div>
             <div className="w-full bg-gray-200 rounded-full h-2">
               <div className="bg-blue-600 h-2 rounded-full transition-all duration-300" style={{ width: `${progreso}%` }} />
@@ -478,12 +487,12 @@ const [paso, setPaso] = useState('inicio');
             <button
               onClick={() => preguntaActual > 0 ? setPreguntaActual(preguntaActual - 1) : setPaso('demograficos')}
               className="flex-1 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors font-medium flex items-center justify-center gap-2">
-              <ChevronLeft className="w-5 h-5" /> Anterior
+              <ChevronLeft className="w-5 h-5" /> {t('previous')}
             </button>
             {preguntaActual === preguntasCBI.length - 1 && respuestas[pregunta.id] !== undefined && (
               <button onClick={() => setPaso('cualitativos')}
                 className="flex-1 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium flex items-center justify-center gap-2">
-                Continuar <ChevronRight className="w-5 h-5" />
+                {t('next')} <ChevronRight className="w-5 h-5" />
               </button>
             )}
           </div>
@@ -497,60 +506,60 @@ const [paso, setPaso] = useState('inicio');
   if (paso === 'cualitativos') return (
     <div className="max-w-2xl mx-auto">
       <div className="bg-white rounded-xl shadow-lg p-8">
-        <h2 className="text-xl font-bold text-gray-800 mb-1">Sección 3: Contexto Cualitativo</h2>
-        <p className="text-gray-500 text-sm mb-2">Paso 4 de 4 — Opcional</p>
+        <h2 className="text-xl font-bold text-gray-800 mb-1">{t('qual_title')}</h2>
+        <p className="text-gray-500 text-sm mb-2">{t('qual_step')}</p>
         <p className="text-gray-500 text-sm mb-6">
-          Tus respuestas ayudan al equipo a entender los factores organizacionales detrás de los datos.
+          {t('qual_instructions')}
         </p>
         <div className="space-y-6">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              1. Factores del ambiente de trabajo
+              {t('qual_q1_label')}
             </label>
             <p className="text-xs text-gray-500 mb-2">
-              ¿Cuáles son los principales factores en tu entorno laboral (carga de trabajo, liderazgo, recursos) que más contribuyen a tu estrés o bienestar?
+              {t('qual_q1_desc')}
             </p>
             <textarea value={cualitativos.factores_ambiente}
               onChange={e => setCualitativos({ ...cualitativos, factores_ambiente: e.target.value })}
               rows={3}
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 resize-none"
-              placeholder="Escribe tu respuesta aquí (opcional)..." />
+              placeholder={t('qual_placeholder')} />
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              2. Soporte organizacional
+              {t('qual_q2_label')}
             </label>
             <p className="text-xs text-gray-500 mb-2">
-              ¿Qué cambios, herramientas o sistemas de apoyo crees que tu organización podría implementar para prevenir mejor el burnout?
+              {t('qual_q2_desc')}
             </p>
             <textarea value={cualitativos.soporte_organizacional}
               onChange={e => setCualitativos({ ...cualitativos, soporte_organizacional: e.target.value })}
               rows={3}
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 resize-none"
-              placeholder="Escribe tu respuesta aquí (opcional)..." />
+              placeholder={t('qual_placeholder')} />
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              3. Comentarios adicionales
+              {t('qual_q3_label')}
             </label>
             <p className="text-xs text-gray-500 mb-2">
-              ¿Hay algo más que quieras compartir sobre tu experiencia con el estrés laboral que no fue cubierto en las preguntas anteriores?
+              {t('qual_q3_desc')}
             </p>
             <textarea value={cualitativos.comentarios}
               onChange={e => setCualitativos({ ...cualitativos, comentarios: e.target.value })}
               rows={3}
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 resize-none"
-              placeholder="Escribe tu respuesta aquí (opcional)..." />
+              placeholder={t('qual_placeholder')} />
           </div>
         </div>
         <div className="flex gap-4 mt-8">
           <button onClick={() => setPaso('evaluacion')}
             className="flex-1 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors font-medium flex items-center justify-center gap-2">
-            <ChevronLeft className="w-5 h-5" /> Volver
+            <ChevronLeft className="w-5 h-5" /> {t('back')}
           </button>
           <button onClick={finalizarEvaluacion} disabled={guardando}
             className="flex-1 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors font-medium flex items-center justify-center gap-2 disabled:opacity-50">
-            {guardando ? 'Guardando...' : 'Finalizar Evaluación'}
+            {guardando ? t('eval_saving') : t('qual_finish')}
             <CheckCircle className="w-5 h-5" />
           </button>
         </div>
@@ -572,20 +581,20 @@ const [paso, setPaso] = useState('inicio');
                 ? <AlertTriangle className={`w-8 h-8 text-${colorGeneral}-600`} />
                 : <CheckCircle className={`w-8 h-8 text-${colorGeneral}-600`} />}
             </div>
-            <h1 className="text-2xl font-bold text-gray-800 mb-2">Resultados de la Evaluación</h1>
-            <p className="text-gray-600">Copenhagen Burnout Inventory</p>
+            <h1 className="text-2xl font-bold text-gray-800 mb-2">{t('result_subtitle')}</h1>
+            <p className="text-gray-600">{t('eval_subtitle')}</p>
           </div>
           <div className={`p-6 rounded-lg mb-6 bg-${colorGeneral}-50 border border-${colorGeneral}-200`}>
-            <h2 className="text-lg font-semibold text-gray-800 mb-2">Nivel de Riesgo General</h2>
-            <p className={`text-3xl font-bold text-${colorGeneral}-600`}>{nivelGeneral}</p>
+            <h2 className="text-lg font-semibold text-gray-800 mb-2">{t('risk_general')}</h2>
+            <p className={`text-3xl font-bold text-${colorGeneral}-600`}>{riskLabel[nivelGeneral]}</p>
           </div>
           <div className="space-y-4 mb-8">
-            <h3 className="font-semibold text-gray-800">Resultados por Dimensión</h3>
+            <h3 className="font-semibold text-gray-800">{t('rec_dimensions')}</h3>
             <div className="grid gap-4">
               {[
-                { key: 'BP', label: 'Burnout Personal', desc: 'Agotamiento físico y emocional general' },
-                { key: 'BL', label: 'Burnout Laboral', desc: 'Agotamiento relacionado con el trabajo' },
-                { key: 'BC', label: 'Burnout por Cliente/Usuario', desc: 'Agotamiento en el trato con personas' }
+                { key: 'BP', label: t('dim_personal'), desc: t('dim_personal_desc') },
+                { key: 'BL', label: t('dim_work'),     desc: t('dim_work_desc') },
+                { key: 'BC', label: t('dim_client'),   desc: t('dim_client_desc') },
               ].map(({ key, label, desc }) => (
                 <div key={key} className={`p-4 rounded-lg ${niveles[key].bg}`}>
                   <div className="flex justify-between items-center">
@@ -595,7 +604,7 @@ const [paso, setPaso] = useState('inicio');
                     </div>
                     <div className="text-right">
                       <p className={`text-2xl font-bold ${niveles[key].color}`}>{puntajes[key]}</p>
-                      <p className={`text-sm font-medium ${niveles[key].color}`}>{niveles[key].nivel}</p>
+                      <p className={`text-sm font-medium ${niveles[key].color}`}>{riskLabel[niveles[key].nivel]}</p>
                     </div>
                   </div>
                 </div>
@@ -603,21 +612,21 @@ const [paso, setPaso] = useState('inicio');
             </div>
           </div>
           <div className="bg-gray-50 rounded-lg p-4 mb-6">
-            <h3 className="font-semibold text-gray-800 mb-2">Interpretación de puntajes</h3>
+            <h3 className="font-semibold text-gray-800 mb-2">{t('scale_reference')}</h3>
             <div className="grid grid-cols-3 gap-2 text-sm">
-              <div className="text-center p-2 bg-green-100 rounded"><p className="font-medium text-green-700">0-49</p><p className="text-green-600">Bajo</p></div>
-              <div className="text-center p-2 bg-yellow-100 rounded"><p className="font-medium text-yellow-700">50-74</p><p className="text-yellow-600">Medio</p></div>
-              <div className="text-center p-2 bg-red-100 rounded"><p className="font-medium text-red-700">75-100</p><p className="text-red-600">Alto</p></div>
+              <div className="text-center p-2 bg-green-100 rounded"><p className="font-medium text-green-700">0-49</p><p className="text-green-600">{t('risk_low')}</p></div>
+              <div className="text-center p-2 bg-yellow-100 rounded"><p className="font-medium text-yellow-700">50-74</p><p className="text-yellow-600">{t('risk_medium')}</p></div>
+              <div className="text-center p-2 bg-red-100 rounded"><p className="font-medium text-red-700">75-100</p><p className="text-red-600">{t('risk_high')}</p></div>
             </div>
           </div>
           <div className="flex gap-4">
             <button onClick={reiniciarEvaluacion}
               className="flex-1 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors font-medium">
-              Nueva Evaluación
+              {t('eval_new')}
             </button>
             <button onClick={() => onCambiarModulo('mis-recomendaciones')}
               className="flex-1 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium">
-              Ver Recomendaciones
+              {t('result_view_recommendations')}
             </button>
           </div>
         </div>
