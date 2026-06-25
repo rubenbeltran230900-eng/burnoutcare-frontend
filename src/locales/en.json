@@ -218,6 +218,7 @@
   "scale_low": "0-49: Low",
   "scale_medium": "50-74: Medium",
   "scale_high": "75-100: High",
+  "cbi_step": "Step 3 of 4",
   "demo_title": "Section 1: Demographic and Occupational Profile",
   "demo_step": "Step 2 of 4",
   "demo_instructions": "This information is anonymous and used to identify organizational patterns.",

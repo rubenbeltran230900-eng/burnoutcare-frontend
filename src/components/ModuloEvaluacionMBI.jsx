@@ -454,7 +454,7 @@ const ModuloEvaluacionMBI = ({ usuario, onCambiarModulo }) => {
     return (
       <div className="max-w-2xl mx-auto">
         <div className="bg-white rounded-xl shadow-lg p-8">
-          <p className="text-gray-500 text-sm mb-4">{t('eval_subtitle')} — {t('demo_step').replace('2', '3')}</p>
+          <p className="text-gray-500 text-sm mb-4">{t('eval_subtitle')} — {t('cbi_step')}</p>
           <div className="mb-6">
             <div className="flex justify-between text-sm text-gray-600 mb-2">
               <span>{t('eval_question')} {preguntaActual + 1} {t('eval_of')} {preguntasCBI.length}</span>
