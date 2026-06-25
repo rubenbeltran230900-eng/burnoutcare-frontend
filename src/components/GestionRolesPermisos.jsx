@@ -1,14 +1,16 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Shield, Users, Check, X, Info } from 'lucide-react';
 
 const GestionRolesPermisos = ({ usuario }) => {
+  const { t } = useTranslation();
   const [rolSeleccionado, setRolSeleccionado] = useState('administrador');
 
-  // Definición de roles y sus permisos
+  // Role keys ('administrador', 'profesional', etc.) are data identifiers kept as-is
   const roles = {
     administrador: {
-      nombre: 'Administrador',
-      descripcion: 'Acceso completo a todas las funcionalidades del sistema',
+      nombre: t('role_admin'),
+      descripcion: t('roles_desc_admin'),
       color: 'purple',
       permisos: {
         evaluacion: { ver: true, crear: true, editar: true, eliminar: true },
@@ -21,8 +23,8 @@ const GestionRolesPermisos = ({ usuario }) => {
       }
     },
     profesional: {
-      nombre: 'Profesional de Salud',
-      descripcion: 'Acceso a evaluaciones, seguimiento clínico y recomendaciones',
+      nombre: t('roles_name_professional'),
+      descripcion: t('roles_desc_professional'),
       color: 'blue',
       permisos: {
         evaluacion: { ver: true, crear: true, editar: true, eliminar: false },
@@ -35,8 +37,8 @@ const GestionRolesPermisos = ({ usuario }) => {
       }
     },
     coordinador: {
-      nombre: 'Coordinador',
-      descripcion: 'Acceso a indicadores institucionales y reportes NOM-035',
+      nombre: t('role_coordinator'),
+      descripcion: t('roles_desc_coordinator'),
       color: 'green',
       permisos: {
         evaluacion: { ver: true, crear: true, editar: false, eliminar: false },
@@ -49,8 +51,8 @@ const GestionRolesPermisos = ({ usuario }) => {
       }
     },
     evaluado: {
-      nombre: 'Evaluado',
-      descripcion: 'Acceso únicamente a realizar su propia evaluación CBI',
+      nombre: t('role_evaluated'),
+      descripcion: t('roles_desc_evaluated'),
       color: 'gray',
       permisos: {
         evaluacion: { ver: true, crear: true, editar: false, eliminar: false },
@@ -64,14 +66,15 @@ const GestionRolesPermisos = ({ usuario }) => {
     }
   };
 
+  // Module ids are data identifiers kept as-is
   const modulos = [
-    { id: 'evaluacion', nombre: 'Evaluación CBI', descripcion: 'Cuestionario de burnout' },
-    { id: 'dashboard', nombre: 'Dashboards', descripcion: 'Paneles de monitoreo' },
-    { id: 'usuarios', nombre: 'Gestión de Usuarios', descripcion: 'Administración de usuarios' },
-    { id: 'reportes', nombre: 'Reportes NOM-035', descripcion: 'Generación de reportes' },
-    { id: 'recomendaciones', nombre: 'Recomendaciones IA', descripcion: 'Motor de recomendaciones' },
-    { id: 'auditoria', nombre: 'Auditoría', descripcion: 'Registro de actividades' },
-    { id: 'configuracion', nombre: 'Configuración', descripcion: 'Ajustes del sistema' }
+    { id: 'evaluacion', nombre: t('roles_mod_evaluacion'), descripcion: t('roles_mod_evaluacion_desc') },
+    { id: 'dashboard', nombre: t('roles_mod_dashboard'), descripcion: t('roles_mod_dashboard_desc') },
+    { id: 'usuarios', nombre: t('roles_mod_usuarios'), descripcion: t('roles_mod_usuarios_desc') },
+    { id: 'reportes', nombre: t('roles_mod_reportes'), descripcion: t('roles_mod_reportes_desc') },
+    { id: 'recomendaciones', nombre: t('roles_mod_recomendaciones'), descripcion: t('roles_mod_recomendaciones_desc') },
+    { id: 'auditoria', nombre: t('roles_mod_auditoria'), descripcion: t('roles_mod_auditoria_desc') },
+    { id: 'configuracion', nombre: t('roles_mod_configuracion'), descripcion: t('roles_mod_configuracion_desc') }
   ];
 
   const getColorClasses = (color) => {
@@ -93,17 +96,17 @@ const GestionRolesPermisos = ({ usuario }) => {
       <div>
         <h1 className="text-2xl font-bold text-gray-800 flex items-center gap-3">
           <Shield className="w-8 h-8 text-blue-600" />
-          Gestión de Roles y Permisos
+          {t('roles_title')}
         </h1>
-        <p className="text-gray-600">Configuración de accesos por rol en el sistema BurnoutCare</p>
+        <p className="text-gray-600">{t('roles_subtitle')}</p>
       </div>
 
       {/* Info */}
       <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 flex items-start gap-3">
         <Info className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
         <div className="text-sm text-blue-700">
-          <p className="font-medium">Sistema de permisos basado en roles</p>
-          <p className="mt-1">Los permisos están predefinidos para cada rol y garantizan el acceso apropiado según las responsabilidades de cada usuario en el sistema.</p>
+          <p className="font-medium">{t('roles_info_title')}</p>
+          <p className="mt-1">{t('roles_info_text')}</p>
         </div>
       </div>
 
@@ -113,7 +116,7 @@ const GestionRolesPermisos = ({ usuario }) => {
           <div className="bg-white rounded-xl shadow p-4">
             <h3 className="font-semibold text-gray-800 mb-4 flex items-center gap-2">
               <Users className="w-5 h-5" />
-              Roles del Sistema
+              {t('roles_system_roles')}
             </h3>
             <div className="space-y-2">
               {Object.entries(roles).map(([key, rol]) => {
@@ -147,6 +150,7 @@ const GestionRolesPermisos = ({ usuario }) => {
                 <h3 className="font-semibold text-gray-800 text-lg">{rolActual.nombre}</h3>
                 <p className="text-sm text-gray-500">{rolActual.descripcion}</p>
               </div>
+              {/* rolSeleccionado is a data identifier kept as-is */}
               <span className={`px-3 py-1 rounded-full text-sm font-medium ${colorClasses.bg} ${colorClasses.text}`}>
                 {rolSeleccionado}
               </span>
@@ -157,11 +161,11 @@ const GestionRolesPermisos = ({ usuario }) => {
               <table className="w-full">
                 <thead>
                   <tr className="border-b">
-                    <th className="text-left py-3 px-4 font-medium text-gray-700">Módulo</th>
-                    <th className="text-center py-3 px-4 font-medium text-gray-700">Ver</th>
-                    <th className="text-center py-3 px-4 font-medium text-gray-700">Crear</th>
-                    <th className="text-center py-3 px-4 font-medium text-gray-700">Editar</th>
-                    <th className="text-center py-3 px-4 font-medium text-gray-700">Eliminar</th>
+                    <th className="text-left py-3 px-4 font-medium text-gray-700">{t('roles_module')}</th>
+                    <th className="text-center py-3 px-4 font-medium text-gray-700">{t('roles_perm_view')}</th>
+                    <th className="text-center py-3 px-4 font-medium text-gray-700">{t('roles_perm_create')}</th>
+                    <th className="text-center py-3 px-4 font-medium text-gray-700">{t('roles_perm_edit')}</th>
+                    <th className="text-center py-3 px-4 font-medium text-gray-700">{t('roles_perm_delete')}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -230,20 +234,20 @@ const GestionRolesPermisos = ({ usuario }) => {
                 <span className="inline-flex items-center justify-center w-6 h-6 bg-green-100 rounded-full">
                   <Check className="w-4 h-4 text-green-600" />
                 </span>
-                <span className="text-gray-600">Permiso concedido</span>
+                <span className="text-gray-600">{t('roles_perm_granted')}</span>
               </div>
               <div className="flex items-center gap-2">
                 <span className="inline-flex items-center justify-center w-6 h-6 bg-red-100 rounded-full">
                   <X className="w-4 h-4 text-red-600" />
                 </span>
-                <span className="text-gray-600">Sin acceso</span>
+                <span className="text-gray-600">{t('roles_perm_denied')}</span>
               </div>
             </div>
           </div>
 
           {/* Resumen de acceso */}
           <div className="bg-white rounded-xl shadow p-6 mt-6">
-            <h3 className="font-semibold text-gray-800 mb-4">Módulos accesibles para {rolActual.nombre}</h3>
+            <h3 className="font-semibold text-gray-800 mb-4">{t('roles_accessible_for')} {rolActual.nombre}</h3>
             <div className="flex flex-wrap gap-2">
               {modulos
                 .filter(m => rolActual.permisos[m.id]?.ver)
