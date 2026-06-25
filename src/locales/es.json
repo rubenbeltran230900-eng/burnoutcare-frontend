@@ -257,5 +257,6 @@
   "result_general_level": "Nivel de Riesgo General",
   "result_new_eval": "Nueva Evaluación",
   "result_view_recommendations": "Ver Mis Recomendaciones",
-  "eval_cooldown": "Puedes realizar una nueva evaluación en aproximadamente {{days}} día{{days_plural}}."
+  "eval_cooldown": "Puedes realizar una nueva evaluación en aproximadamente {{days}} día{{days_plural}}.",
+  "unknown_date": "fecha desconocida"
 }

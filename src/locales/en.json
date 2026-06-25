@@ -257,5 +257,6 @@
   "result_general_level": "General Risk Level",
   "result_new_eval": "New Evaluation",
   "result_view_recommendations": "View My Recommendations",
-  "eval_cooldown": "You can take a new evaluation in approximately {{days}} day{{days_plural}}."
+  "eval_cooldown": "You can take a new evaluation in approximately {{days}} day{{days_plural}}.",
+  "unknown_date": "unknown date"
 }

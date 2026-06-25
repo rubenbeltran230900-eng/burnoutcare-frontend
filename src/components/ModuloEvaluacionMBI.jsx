@@ -300,7 +300,7 @@ const ModuloEvaluacionMBI = ({ usuario, onCambiarModulo }) => {
       ? new Date(evaluacionExistente.ultima_fecha).toLocaleDateString('es-MX', {
           day: '2-digit', month: 'long', year: 'numeric'
         })
-      : 'fecha desconocida';
+      : t('unknown_date');
     const diasRestantes = evaluacionExistente?.ultima_fecha
       ? 30 - Math.floor((Date.now() - new Date(evaluacionExistente.ultima_fecha)) / 86400000)
       : 30;
