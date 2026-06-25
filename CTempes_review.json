@@ -69,8 +69,6 @@
   "eval_items_qual": "• 3 preguntas de contexto cualitativo",
   "eval_time": "• Tiempo estimado: 10-15 minutos",
   "eval_confidential": "• Completamente confidencial",
-  "eval_questions": "19 preguntas en total",
-  "eval_results": "Resultados inmediatos",
   "eval_start": "Comenzar Evaluación",
   "eval_finish": "Finalizar",
   "eval_new": "Nueva Evaluación",
@@ -256,6 +254,5 @@
   "result_subtitle": "Copenhagen Burnout Inventory — Resultados",
   "result_general_level": "Nivel de Riesgo General",
   "result_new_eval": "Nueva Evaluación",
-  "result_view_recommendations": "Ver Mis Recomendaciones",
-  "eval_cooldown": "Puedes realizar una nueva evaluación en aproximadamente {{days}} día{{days_plural}}."
+  "result_view_recommendations": "Ver Mis Recomendaciones"
 }

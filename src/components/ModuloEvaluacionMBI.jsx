@@ -317,8 +317,7 @@ const ModuloEvaluacionMBI = ({ usuario, onCambiarModulo }) => {
           </p>
 
           <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6 text-sm text-blue-700">
-            Podrás realizar una nueva evaluación en aproximadamente{' '}
-            <span className="font-semibold">{diasRestantes} día{diasRestantes !== 1 ? 's' : ''}</span>.
+            {t('eval_cooldown', { days: diasRestantes, days_plural: diasRestantes !== 1 ? 's' : '' })}
           </div>
 
           <div className="flex flex-col gap-3">
@@ -327,7 +326,7 @@ const ModuloEvaluacionMBI = ({ usuario, onCambiarModulo }) => {
                 onClick={() => onCambiarModulo('recomendaciones')}
                 className="w-full py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium flex items-center justify-center gap-2"
               >
-                <ClipboardList className="w-5 h-5" /> Ver mis recomendaciones
+                <ClipboardList className="w-5 h-5" /> {t('result_view_recommendations')}
               </button>
             )}
             <button
