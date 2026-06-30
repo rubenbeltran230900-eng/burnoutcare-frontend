@@ -26,6 +26,7 @@
   "login_loading": "Ingresando...",
   "login_error": "Credenciales incorrectas",
   "login_server_error": "Error al conectar con el servidor",
+  "msg_session_expired": "Tu sesión ha expirado. Por favor inicia sesión nuevamente.",
   "login_access": "Acceder al Sistema",
   "login_no_account": "¿Eres colaborador y no tienes cuenta?",
   "login_create_account": "Crear cuenta con código de empresa →",

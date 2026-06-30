@@ -43,6 +43,18 @@ const cambiarIdioma = (idioma) => {
     }
   }, []);
 
+  // Sesión expirada: cualquier llamada a la API que reciba 401 dispara este evento
+  useEffect(() => {
+    const manejarSesionExpirada = () => {
+      setUsuarioAutenticado(null);
+      setModuloActivo(null);
+      setMostrarLogin(true);
+      setErrorLogin(t('msg_session_expired'));
+    };
+    window.addEventListener('auth:session-expired', manejarSesionExpirada);
+    return () => window.removeEventListener('auth:session-expired', manejarSesionExpirada);
+  }, [t]);
+
   // Definición de módulos por rol
   const modulosPorRol = {
     administrador: [

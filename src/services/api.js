@@ -21,6 +21,11 @@ const fetchAPI = async (endpoint, options = {}) => {
     const data = await response.json();
     
     if (!response.ok) {
+      if (response.status === 401) {
+        localStorage.removeItem('token');
+        localStorage.removeItem('usuario');
+        window.dispatchEvent(new CustomEvent('auth:session-expired'));
+      }
       const err = new Error(data.error || 'Error en la petición');
       err.status = response.status;
       err.codigo = data.codigo || null;

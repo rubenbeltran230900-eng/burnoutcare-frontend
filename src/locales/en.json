@@ -26,6 +26,7 @@
   "login_loading": "Signing in...",
   "login_error": "Invalid credentials",
   "login_server_error": "Error connecting to server",
+  "msg_session_expired": "Your session has expired. Please log in again.",
   "login_access": "Access System",
   "login_no_account": "Are you an employee without an account?",
   "login_create_account": "Create account with company code →",
