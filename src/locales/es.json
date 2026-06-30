@@ -438,6 +438,9 @@
   "company_users_btn": "Usuarios",
   "company_users_count": "{{count}} usuarios",
   "company_users_active_count": "{{count}} activos",
+  "company_placeholder_name": "Ej: Consagui S.A. de C.V.",
+  "company_placeholder_contact": "Ej: Lic. Ana García",
+  "company_placeholder_user_email": "correo@empresa.com",
 
   "roles_title": "Gestión de Roles y Permisos",
   "roles_subtitle": "Configuración de accesos por rol en el sistema BurnoutCare",

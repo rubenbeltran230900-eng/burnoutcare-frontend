@@ -310,10 +310,10 @@ const GestionEmpresas = () => {
       {modal === 'empresa' && (
         <Modal titulo={empresaEditando ? t('company_modal_edit') : t('company_modal_new')} onClose={() => setModal(null)}>
           <div className="space-y-4">
-            <Input label={t('company_name')} value={formEmpresa.nombre} onChange={v => setFormEmpresa({...formEmpresa, nombre: v})} placeholder="Ej: Consagui S.A. de C.V." required />
+            <Input label={t('company_name')} value={formEmpresa.nombre} onChange={v => setFormEmpresa({...formEmpresa, nombre: v})} placeholder={t('company_placeholder_name')} required />
             <Select label={t('company_sector')} value={formEmpresa.sector} onChange={v => setFormEmpresa({...formEmpresa, sector: v})} options={SECTORES} placeholder={t('company_select')} />
             <Select label={t('company_size')} value={formEmpresa.tamanio} onChange={v => setFormEmpresa({...formEmpresa, tamanio: v})} options={TAMANIOS} placeholder={t('company_select')} />
-            <Input label={t('company_contact_name')} value={formEmpresa.contacto_nombre} onChange={v => setFormEmpresa({...formEmpresa, contacto_nombre: v})} placeholder="Ej: Lic. Ana García" />
+            <Input label={t('company_contact_name')} value={formEmpresa.contacto_nombre} onChange={v => setFormEmpresa({...formEmpresa, contacto_nombre: v})} placeholder={t('company_placeholder_contact')} />
             <Input label={t('company_contact_email')} value={formEmpresa.contacto_email} onChange={v => setFormEmpresa({...formEmpresa, contacto_email: v})} placeholder="contacto@empresa.com" type="email" />
           </div>
           <div className="flex gap-3 mt-6">
@@ -448,7 +448,7 @@ const GestionEmpresas = () => {
         <Modal titulo={usuarioEditando ? t('company_modal_edit_user') : t('company_modal_new_user')} onClose={() => setModal(null)}>
           <div className="space-y-4">
             <Input label={t('users_name')} value={formUsuario.nombre} onChange={v => setFormUsuario({...formUsuario, nombre: v})} placeholder={t('users_full_name_placeholder')} required />
-            <Input label={t('users_email')} value={formUsuario.email} onChange={v => setFormUsuario({...formUsuario, email: v})} placeholder="correo@empresa.com" type="email" required />
+            <Input label={t('users_email')} value={formUsuario.email} onChange={v => setFormUsuario({...formUsuario, email: v})} placeholder={t('company_placeholder_user_email')} type="email" required />
             <Input label={usuarioEditando ? t('company_user_new_password') : t('users_password')} value={formUsuario.password} onChange={v => setFormUsuario({...formUsuario, password: v})} placeholder="••••••••" type="password" required={!usuarioEditando} />
             <Select label={t('users_role')} value={formUsuario.rol} onChange={v => setFormUsuario({...formUsuario, rol: v})} options={ROLES} placeholder={t('company_select')} required />
             <Input label={t('company_user_area')} value={formUsuario.area} onChange={v => setFormUsuario({...formUsuario, area: v})} placeholder={t('users_placeholder_area')} />

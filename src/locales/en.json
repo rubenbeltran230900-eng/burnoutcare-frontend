@@ -438,6 +438,9 @@
   "company_users_btn": "Users",
   "company_users_count": "{{count}} users",
   "company_users_active_count": "{{count}} active",
+  "company_placeholder_name": "e.g. Acme Corporation",
+  "company_placeholder_contact": "e.g. John Smith",
+  "company_placeholder_user_email": "email@company.com",
 
   "roles_title": "Roles & Permissions Management",
   "roles_subtitle": "Access configuration by role in the BurnoutCare system",
