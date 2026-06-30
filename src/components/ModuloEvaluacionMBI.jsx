@@ -218,44 +218,44 @@ const ModuloEvaluacionMBI = ({ usuario, onCambiarModulo }) => {
         </div>
 
         <div className="bg-gray-50 border border-gray-200 rounded-lg p-5 mb-6 h-80 overflow-y-auto text-sm text-gray-700 space-y-4 leading-relaxed">
-          <p className="font-semibold text-gray-800">Estudio: BurnoutCare — Detección de Burnout Laboral mediante IA</p>
+          <p className="font-semibold text-gray-800">{t('consent_study_title')}</p>
 
           <div>
-            <p className="font-semibold mb-1">Investigador principal</p>
-            <p>Rubén Beltrán Marañón — Instituto Tecnológico de Orizaba (TecNM) / ReSTORE Lab, Universidad de Toronto. Directora: Dra. Edna Araceli Romero Flores.</p>
+            <p className="font-semibold mb-1">{t('consent_pi_label')}</p>
+            <p>{t('consent_pi_text')}</p>
           </div>
 
           <div>
-            <p className="font-semibold mb-1">Propósito del estudio</p>
-            <p>Este estudio tiene como objetivo desarrollar y validar un sistema de soporte a la decisión clínica para la detección temprana de burnout ocupacional. Tu participación contribuye directamente a mejorar la salud laboral en organizaciones.</p>
+            <p className="font-semibold mb-1">{t('consent_purpose_label')}</p>
+            <p>{t('consent_purpose_text')}</p>
           </div>
 
           <div>
-            <p className="font-semibold mb-1">¿Qué implica tu participación?</p>
-            <p>Responder el Copenhagen Burnout Inventory (CBI) de 19 preguntas en escala Likert, un perfil demográfico breve y tres preguntas cualitativas opcionales. Tiempo estimado: 10–15 minutos.</p>
+            <p className="font-semibold mb-1">{t('consent_participation_label')}</p>
+            <p>{t('consent_participation_text')}</p>
           </div>
 
           <div>
-            <p className="font-semibold mb-1">Confidencialidad y manejo de datos</p>
-            <p>Tus respuestas se almacenarán en una base de datos segura. Para fines de investigación y publicación, los datos se utilizan de forma agregada y anonimizada — nunca se publicarán datos individuales que permitan identificarte. El acceso a los datos crudos está restringido al equipo de investigación.</p>
+            <p className="font-semibold mb-1">{t('consent_confidentiality_label')}</p>
+            <p>{t('consent_confidentiality_text')}</p>
           </div>
 
           <div>
-            <p className="font-semibold mb-1">Participación voluntaria</p>
-            <p>Tu participación es completamente voluntaria. Puedes abandonar el cuestionario en cualquier momento sin ninguna consecuencia. Si ya enviaste tus respuestas y deseas que sean eliminadas, contáctanos y las removeremos del dataset.</p>
+            <p className="font-semibold mb-1">{t('consent_voluntary_label')}</p>
+            <p>{t('consent_voluntary_text')}</p>
           </div>
 
           <div>
-            <p className="font-semibold mb-1">Riesgos y beneficios</p>
-            <p>No existen riesgos significativos asociados a este estudio. Como beneficio, recibirás un análisis personalizado de tu nivel de burnout con recomendaciones específicas generadas por IA.</p>
+            <p className="font-semibold mb-1">{t('consent_risks_label')}</p>
+            <p>{t('consent_risks_text')}</p>
           </div>
 
           <div>
-            <p className="font-semibold mb-1">Contacto</p>
-            <p>¿Tienes preguntas sobre el estudio? Escríbenos a: <span className="font-medium">burnoutcare.research@gmail.com</span></p>
+            <p className="font-semibold mb-1">{t('consent_contact_label')}</p>
+            <p>{t('consent_contact_text')} <span className="font-medium">burnoutcare.research@gmail.com</span></p>
           </div>
 
-          <p className="text-xs text-gray-400 pt-2">Versión del formulario: {CONSENTIMIENTO_VERSION}</p>
+          <p className="text-xs text-gray-400 pt-2">v{CONSENTIMIENTO_VERSION}</p>
         </div>
 
         <label className="flex items-start gap-3 cursor-pointer mb-6 p-4 border-2 rounded-lg transition-colors"
