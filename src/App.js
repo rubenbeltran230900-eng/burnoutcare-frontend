@@ -284,13 +284,6 @@ case 'empresas':
                   {cargando ? t('login_loading') : t('login_button')}
                 </button>
               </form>
-
-              <div className="mt-6 p-4 bg-gray-50 rounded-lg">
-                <p className="text-xs text-gray-500 text-center">
-                  <strong>{t('login_test_user')}</strong><br />
-                  admin@demo.com / 123456
-                </p>
-              </div>
             </div>
           )}
         </div>
