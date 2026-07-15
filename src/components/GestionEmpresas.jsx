@@ -1,12 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Building2, Plus, Edit, Trash2, Users, ChevronRight, ChevronLeft, ToggleLeft, ToggleRight, X, Check, UserPlus, Shield } from 'lucide-react';
+import { Building2, Plus, Edit, Trash2, Users, ChevronRight, ChevronLeft, ToggleLeft, ToggleRight, X, Check, UserPlus, Shield, KeyRound, RefreshCw } from 'lucide-react';
 import { empresasService, usuariosService } from '../services/api';
 
 // Data identifiers kept as-is: sector/tamanio option values are used as API data keys
 const ROLES = ['administrador', 'profesional', 'coordinador', 'evaluado'];
 const SECTORES = ['Manufactura', 'Salud', 'Educación', 'Servicios', 'Construcción', 'Tecnología', 'Comercio', 'Otro'];
 const TAMANIOS = ['Micro (1-10)', 'Pequeña (11-50)', 'Mediana (51-250)', 'Grande (250+)'];
+
+const generarCodigoRegistro = (nombre) => {
+  const sinAcentos = (nombre || '').normalize('NFD').replace(/[̀-ͯ]/g, '');
+  const base = sinAcentos.toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 5) || 'EMP';
+  return `${base}-${new Date().getFullYear()}`;
+};
 
 const Modal = ({ titulo, onClose, children }) => (
   <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
@@ -55,7 +61,7 @@ const GestionEmpresas = () => {
   const [itemAEliminar, setItemAEliminar] = useState(null);
   const [guardando, setGuardando] = useState(false);
 
-  const [formEmpresa, setFormEmpresa] = useState({ nombre: '', sector: '', tamanio: '', contacto_nombre: '', contacto_email: '' });
+  const [formEmpresa, setFormEmpresa] = useState({ nombre: '', sector: '', tamanio: '', contacto_nombre: '', contacto_email: '', codigo_registro: '' });
   const [formUsuario, setFormUsuario] = useState({ nombre: '', email: '', password: '', rol: 'evaluado', area: '', puesto: '' });
   const [usuarioEditando, setUsuarioEditando] = useState(null);
   const [empresaEditando, setEmpresaEditando] = useState(null);
@@ -105,13 +111,13 @@ const GestionEmpresas = () => {
 
   // ── EMPRESAS ──────────────────────────────────────────
   const abrirCrearEmpresa = () => {
-    setFormEmpresa({ nombre: '', sector: '', tamanio: '', contacto_nombre: '', contacto_email: '' });
+    setFormEmpresa({ nombre: '', sector: '', tamanio: '', contacto_nombre: '', contacto_email: '', codigo_registro: '' });
     setEmpresaEditando(null);
     setModal('empresa');
   };
 
   const abrirEditarEmpresa = (empresa) => {
-    setFormEmpresa({ nombre: empresa.nombre, sector: empresa.sector || '', tamanio: empresa.tamanio || '', contacto_nombre: empresa.contacto_nombre || '', contacto_email: empresa.contacto_email || '' });
+    setFormEmpresa({ nombre: empresa.nombre, sector: empresa.sector || '', tamanio: empresa.tamanio || '', contacto_nombre: empresa.contacto_nombre || '', contacto_email: empresa.contacto_email || '', codigo_registro: empresa.codigo_registro || '' });
     setEmpresaEditando(empresa);
     setModal('empresa');
   };
@@ -276,6 +282,11 @@ const GestionEmpresas = () => {
                     {empresa.tamanio && <span>🏢 {empresa.tamanio}</span>}
                     {empresa.contacto_nombre && <span>👤 {empresa.contacto_nombre}</span>}
                     {empresa.contacto_email && <span>✉️ {empresa.contacto_email}</span>}
+                    {empresa.codigo_registro && (
+                      <span className="flex items-center gap-1 font-mono bg-gray-100 px-2 py-0.5 rounded">
+                        <KeyRound className="w-3.5 h-3.5" /> {empresa.codigo_registro}
+                      </span>
+                    )}
                   </div>
                   <div className="flex gap-4 mt-2 text-sm">
                     <span className="text-blue-600 font-medium">{t('company_users_count', { count: empresa.total_usuarios || 0 })}</span>
@@ -315,6 +326,22 @@ const GestionEmpresas = () => {
             <Select label={t('company_size')} value={formEmpresa.tamanio} onChange={v => setFormEmpresa({...formEmpresa, tamanio: v})} options={TAMANIOS} placeholder={t('company_select')} />
             <Input label={t('company_contact_name')} value={formEmpresa.contacto_nombre} onChange={v => setFormEmpresa({...formEmpresa, contacto_nombre: v})} placeholder={t('company_placeholder_contact')} />
             <Input label={t('company_contact_email')} value={formEmpresa.contacto_email} onChange={v => setFormEmpresa({...formEmpresa, contacto_email: v})} placeholder="contacto@empresa.com" type="email" />
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">{t('company_registration_code')}</label>
+              <div className="flex gap-2">
+                <input type="text" value={formEmpresa.codigo_registro}
+                  onChange={e => setFormEmpresa({...formEmpresa, codigo_registro: e.target.value.toUpperCase()})}
+                  placeholder="EJ: CONS-2026"
+                  className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 font-mono" />
+                <button type="button"
+                  onClick={() => setFormEmpresa({...formEmpresa, codigo_registro: generarCodigoRegistro(formEmpresa.nombre)})}
+                  disabled={!formEmpresa.nombre}
+                  className="flex items-center gap-1 px-3 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 disabled:opacity-50 text-sm font-medium whitespace-nowrap">
+                  <RefreshCw className="w-4 h-4" /> {t('company_generate_code')}
+                </button>
+              </div>
+              <p className="text-xs text-gray-400 mt-1">{t('company_registration_code_hint')}</p>
+            </div>
           </div>
           <div className="flex gap-3 mt-6">
             <button onClick={() => setModal(null)} className="flex-1 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50">{t('cancel')}</button>
