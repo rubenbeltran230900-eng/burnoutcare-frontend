@@ -138,18 +138,22 @@ export const evaluacionesService = {
   eliminar: (id) => fetchAPI(`/evaluaciones/${id}`, {
     method: 'DELETE'
   }),
-  exportarCSV: async (empresaId = null) => {
-    const query = empresaId ? `?empresa_id=${empresaId}` : '';
+  exportarCSV: async (empresaId = null, identificado = false) => {
+    const params = new URLSearchParams();
+    if (empresaId) params.set('empresa_id', empresaId);
+    if (identificado) params.set('identificado', 'true');
+    const query = params.toString() ? `?${params.toString()}` : '';
     const response = await fetch(`${API_URL}/evaluaciones/export-csv${query}`, {
       headers: { 'Authorization': `Bearer ${getToken()}` }
     });
     if (!response.ok) throw new Error('Error al exportar CSV');
     const blob = await response.blob();
     const fecha = new Date().toISOString().split('T')[0];
+    const sufijo = identificado ? 'identificado' : 'anonimizado';
     const url = window.URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `burnoutcare_datos_${fecha}.csv`;
+    a.download = `burnoutcare_datos_${sufijo}_${fecha}.csv`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);

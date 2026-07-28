@@ -11,6 +11,7 @@ const PanelReportesNOM035 = ({ usuario }) => {
   const [reporteGenerado, setReporteGenerado] = useState(null);
   const [tipoReporte, setTipoReporte] = useState('general');
   const [exportandoCSV, setExportandoCSV] = useState(false);
+  const [exportarIdentificado, setExportarIdentificado] = useState(false);
 
   useEffect(() => {
     cargarEvaluaciones();
@@ -325,13 +326,24 @@ Autorizó: _______________________     Fecha: ______________
 
               <div className="border-t pt-4 mt-2">
                 <p className="text-xs text-gray-500 mb-2">{t('reports_csv_desc')}</p>
+                {usuario.rol === 'administrador' && (
+                  <label className="flex items-center gap-2 text-xs text-gray-600 mb-2 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={exportarIdentificado}
+                      onChange={e => setExportarIdentificado(e.target.checked)}
+                    />
+                    {t('reports_csv_identified')}
+                  </label>
+                )}
                 <button
                   onClick={async () => {
                     setExportandoCSV(true);
                     setError('');
                     try {
                       await evaluacionesService.exportarCSV(
-                        usuario.rol === 'administrador' ? null : usuario.empresa_id
+                        usuario.rol === 'administrador' ? null : usuario.empresa_id,
+                        usuario.rol === 'administrador' && exportarIdentificado
                       );
                     } catch (err) {
                       setError(t('reports_err_csv'));
