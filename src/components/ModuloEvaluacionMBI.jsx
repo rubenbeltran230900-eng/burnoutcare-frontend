@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { ClipboardList, ChevronRight, ChevronLeft, CheckCircle, AlertTriangle, User, Briefcase, Building } from 'lucide-react';
 import { evaluacionesService } from '../services/api';
 
-const CONSENTIMIENTO_VERSION = '1.0-2026-06';
+const CONSENTIMIENTO_VERSION = '1.1-2026-10';
 
 const ModuloEvaluacionMBI = ({ usuario, onCambiarModulo }) => {
   const { t } = useTranslation();
@@ -248,6 +248,11 @@ const ModuloEvaluacionMBI = ({ usuario, onCambiarModulo }) => {
           <div>
             <p className="font-semibold mb-1">{t('consent_risks_label')}</p>
             <p>{t('consent_risks_text')}</p>
+          </div>
+
+          <div>
+            <p className="font-semibold mb-1">{t('consent_ai_label')}</p>
+            <p>{t('consent_ai_text')}</p>
           </div>
 
           <div>
