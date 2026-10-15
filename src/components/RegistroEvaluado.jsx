@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { API_URL } from '../services/api';
 
 const RegistroEvaluado = ({ onRegistroExitoso, onVolverLogin }) => {
   const { t } = useTranslation();
@@ -42,7 +43,7 @@ const RegistroEvaluado = ({ onRegistroExitoso, onVolverLogin }) => {
     if (!validarPaso2()) return;
     setLoading(true);
     try {
-      const response = await fetch('https://burnoutcare-api-production.up.railway.app/api/auth/registro-evaluado', {
+      const response = await fetch(`${API_URL}/auth/registro-evaluado`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

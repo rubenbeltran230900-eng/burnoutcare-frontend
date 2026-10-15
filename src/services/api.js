@@ -1,5 +1,6 @@
 // Configuración base de la API
-const API_URL = 'https://burnoutcare-api-production.up.railway.app/api';
+// En desarrollo local, definir REACT_APP_API_URL en .env.local (ej. http://localhost:3001/api)
+export const API_URL = process.env.REACT_APP_API_URL || 'https://burnoutcare-api-production.up.railway.app/api';
 
 // Obtener token del localStorage
 const getToken = () => localStorage.getItem('token');
